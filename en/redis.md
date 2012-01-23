@@ -340,8 +340,8 @@ It's worth pointing out that the Big O notation deals with averages. When we say
 
 A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
 
-	set users:leto@dune.gov "{id: 90001, email: 'leto@dune.gov', ...}"
-	set users:9001 "{id: 90001, email: 'leto@dune.gov', ...}"
+	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}"
+	set users:9001 "{id: 9001, email: 'leto@dune.gov', ...}"
 
 This is bad because it's a nightmare to manage and it takes twice the amount of memory.
 
@@ -349,7 +349,7 @@ It would be nice if Redis let you link one key to another, but it doesn't (and i
 
 Using a hash, we can can remove the need for duplication:
 	
-	set users:9001 "{id: 90001, email: leto@dune.gov, ...}"
+	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
 
 What we are doing is using the field as a pseudo secondary index and referencing the single user object. To get a user by id, we issue a normal `get`:
