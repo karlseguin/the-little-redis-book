@@ -32,7 +32,7 @@ A special thanks to [Perry Neal](https://twitter.com/perryneal) for lending me h
 ### Latest Version
 
 The latest source of this book is available at:
-<http://github.com/karlseguin/the-little-redis-book.>
+<http://github.com/karlseguin/the-little-redis-book>
 
 \clearpage
 
