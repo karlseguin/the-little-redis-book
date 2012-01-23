@@ -36,7 +36,7 @@ I use a variation of <https://github.com/claes/pandoc-templates> to generate the
 	-V paper=$paper -V hmargin=$hmargin -V vmargin=$vmargin \
 	-V mainfont="$mainfont" -V sansfont="$sansfont" -V monofont="$monofont" \
 	-V geometry=$geometry -V columns=$columns -V fontsize=$fontsize \
-	-V nohyphenation=$nohyphenation --listings en/redis.md -o redis.pdf 
+	-V nohyphenation=$nohyphenation en/redis.md -o redis.pdf 
 
 ## Title Image ##
 A PSD of the title image is included. The font used is [Comfortaa](http://www.dafont.com/comfortaa.font).
