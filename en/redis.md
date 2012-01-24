@@ -331,9 +331,9 @@ Next we have linear commands, or O(N). Looking for a non-indexed row in a table 
 
 The `sort` command, which we'll discuss in greater detail in the next chapter has a complexity of O(N+M*log(M)). From its performance characteristic, you can probably tell that this is one of Redis' most complex commands.
 
-There are a number of other Big O notations, the two remaining common ones are O(N^2) and O(C^N). The larger N is, the worse these perform relative to a smaller N. None of Redis' commands have this type of complexity.
+There are a number of other complexities, the two remaining common ones are O(N^2) and O(C^N). The larger N is, the worse these perform relative to a smaller N. None of Redis' commands have this type of complexity.
 
-It's worth pointing out that the Big O notation deals with averages. When we say that something takes O(N), we might actually find it right away or it might be the last possible element.
+It's worth pointing out that the Big O notation deals with the worst case. When we say that something takes O(N), we might actually find it right away or it might be the last possible element.
 
 
 ### Pseudo Multi Key Queries
