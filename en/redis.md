@@ -109,11 +109,9 @@ Redis has the same basic concept of a database that you are already familiar wit
 
 In Redis, databases are simply identified by a number with the default database being number `0`. If you want to change to a different database you can do so via the `select` command. In the command line interface, type `select 1`. Redis should reply with an `OK` message and your prompt should change to something like `redis 127.0.0.1:6379[1]>`. If you want to switch back to the default database, just enter `select 0` in the command line interface..
 
-### Command, Keys and Values
+### Commands, Keys and Values
 
 While Redis is more than just a key-value store, at its core, every one of Redis' five data structures has at least a key and a value. It's imperative that we understand keys and values before moving on to other available pieces of information.
-
-Although Redis is more than a key-value  store, every data structure deals with at least a key and a value. Some deal with more pieces of information, and all expose more than simple `get` and `set` behavior. None of that matters though unless we really understand keys and values.
 
 Keys are how you identify pieces of data. We'll be dealing with keys a lot, but for now, it's good enough to know that a key might look like `users:leto`. One could reasonably expect such a key to contain information about a user named `leto`. The colon doesn't have any special meaning, as far as Redis is concerned, but using a separator is a common approach people use to organize their keys.
 
