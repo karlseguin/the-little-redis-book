@@ -5,33 +5,33 @@
 \clearpage
 \changepage{}{}{}{0.5cm}{}{-2cm}{}{}{}
 
-## About This Book
+## Об этой книге
 
-### License
+### Лицензия
 
-The Little Redis Book is licensed under the Attribution-NonCommercial 3.0 Unported license. You should not have paid for this book.
+The Little Redis Book (Маленькая книга о Redis) распространяется под лицензией Attribution-NonCommercial 3.0 Unported. Вы не обязаны платить за эту книгу.
 
-You are free to copy, distribute, modify or display the book. However, I ask that you always attribute the book to me, Karl Seguin, and do not use it for commercial purposes.
+Вы можете свободно копировать, распространять, изменять и публиковать книгу. Тем не менее, я прошу, чтобы вы всегда указывали мое, Карла Сегуина (Karl Seguin), авторство и не использовали книгу в коммерческих целях.
 
-You can see the *full text* of **the license at**:
+Полный текст лицензии вы можете найти по ссылке:
 
 <http://creativecommons.org/licenses/by-nc/3.0/legalcode>
 
-### About The Author
+### Об авторе
 
-Karl Seguin is a developer with experience across various fields and technologies. He's an active contributor to Open-Source Software projects, a technical writer and an occasional speaker. He's written various articles, as well as a few tools, about Redis. Redis powers the ranking and statistics of his free service for casual game developers: [mogade.com](http://mogade.com/).
+Карл Сегуин - разработчик, имеющий опыт работы в разных областях и с разными технологями. Активный участник проектов Открытого/Свободного ПО, технический писатель и докладчик на некоторых конференциях. Является автором различных статей о Redis и нескольких утилит для работы с этой системой. На Redis работает система ранжирования и статистики на его бесплатном сервисе для разработчиков казуальных игр - [mogade.com](http://mogade.com/).
 
-Karl wrote [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/), the free and popular book about MongoDB.
+Карл написал [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/), популярную бесплатную книгу о MongoDB.
 
-His blog can be found at <http://openmymind.net> and he tweets via [@karlseguin](http://twitter.com/karlseguin)
+Вы можете найти его блог по адресу <http://openmymind.net>, а также читать его записи в Twitter: [@karlseguin](http://twitter.com/karlseguin)
 
-### With Thanks To
+### Благодарности
 
-A special thanks to [Perry Neal](https://twitter.com/perryneal) for lending me his eyes, mind and passion. You provided me with invaluable help. Thank you.
+Особая благодарность выражается  Перри Нилу ([Perry Neal](https://twitter.com/perryneal)) за его зоркий взгляд, ум и страсть. Ты оказал мне неоценимую помощь. Спасибо.
 
-### Latest Version
+### Актуальная версия
 
-The latest source of this book is available at:
+Актуальная версия книги доступна по адресу:
 <http://github.com/karlseguin/the-little-redis-book>
 
 \clearpage
