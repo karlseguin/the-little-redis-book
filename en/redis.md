@@ -423,9 +423,9 @@ Although these commands are useful, you'll inevitably need to run multiple comma
 
 * The commands will be executed in order
 
-* The commands will be executed as a single atomic operation (without another client's command being executed halfway through) 
+* The commands will be executed as a single atomic operation (without another client's command being executed halfway through)
 
-* That either all or none of the commands in the transaction will be executed.
+* That either all or none of the commands in the transaction will be executed
 
 You can, and should, test this in the command line interface. Also note that there's no reason why you can't combine pipelining and transactions.
 
