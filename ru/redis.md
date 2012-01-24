@@ -46,42 +46,42 @@ The Little Redis Book (Маленькая книга о Redis) распрост�
 
 Цель этой книги состояит в построении базиса, необходимого для работы с Redis. Мы сфокусируем усилия на изучении пяти структур данных Redis и рассмотрим различные подходы к моделированию данных. также будут затронуты некоторые ключевые вопросы администрирования и способы отладки.
 
-## Getting Started
+## Начало работы
 
-We all learn differently: some like to get their hands dirty, some like to watch videos, and some like to read. Nothing will help you understand Redis more than actually experiencing it. Redis is easy to install and comes with a simple shell that'll give us everything we need. Let's take a couple minutes and get it up and running on our machine.
+Мы все учимся по-рабному: кто-то предпочитает собственный опыт, кто-то смотрит видео, кто-то читает. Ничто не поможет вам понять Redis лучше, чем реальная работа. Redis легко устанавливается и в комплект установки входит простая командная оболочка, предоставляющая все необходимые возможности. Давайте потратим пару минут на то, чтобы установить и запустить Redis у себя на компьютере.
 
-### On Windows
+### В Windows
 
-Redis doesn't officially support Windows, but there are options available. You wouldn't run these in production, but I've never experienced any limitations while doing development.
+Redis официально не поддерживает Windows, но есть возможности запустить ее на этой системе. Вы вряд ли станете так делать на продакш-сервере, но я никогда не сталкивался с какими-либо трудностями при разработке.
 
-First head over to <https://github.com/dmajkic/redis/downloads> and download the most up to date version (which should be at the top of the list).
+Сначала перейдите на <https://github.com/dmajkic/redis/downloads> и скачайте последнюю версию (вверху списка).
 
-Extract the zip file and, based on your architecture, open either the `64bit` or `32bit` folder.
+Распакуйте архив и, в зависимости от архитектуры вашего компьютера, откройте директорию `64bit` или `32bit`.
 
-### On *nix and MacOSX
+### В *nix и MacOSX
 
-For *nix and and Mac users, building it from source is your best option. The instructions, along with the latest version number, are available at <http://redis.io/download>. At the time of this writing the latest version is 2.4.6; to install this version we would execute:
+Для пользователей *nix и Mac, сборка Redis из исходников является лучшим вариантом. Инструкции, вместе с номером последней версии, доступны по адресу <http://redis.io/download>. На момент написания этих строк последней версией является 2.4.6. Для установки выполните:
 
 	wget http://redis.googlecode.com/files/redis-2.4.6.tar.gz
 	tar xzf redis-2.4.6.tar.gz
 	cd redis-2.4.6
 	make
 
-(Alternatively, Redis is available via various package managers. For example, MacOSX users with Homebrew installed can simply type `brew install redis`.)
+(В качестве альтернативы, Redis доступна через различные мнеджеры пакетов. Например, пользователи MacOSX с установленным Homebrew могут просто выполнить команду `brew install redis`.) (*Установка через менеджер пакетов может оказаться гораздо более удачным решением с точки зрения сохранения правильной конфигурации вашей системы - Прим. перев.*)
 
-If you built it from source, the binary outputs have been placed in the `src` directory. Navigate to the `src` directory by executing `cd src`.
+Если вы собрали систему из исходных текстов, исполняемые файлы расположены в директории `src`. перейдите в эту директорию, введя команду `cd src`.
 
-### Running and Connecting to Redis
+### Запуск и подключение к Redis
 
-If everything worked, the Redis binaries should be available at your fingertips. Redis has a handful of executables. We'll focus on the Redis server and the Redis command line interface (a DOS-like client). Let's start the server. In Windows, double click `redis-server`. On *nix/MacOSX run `./redis-server`. 
+Если все прошло успешно, исполняемые файлы Redis должны быть в вашем распоряжении. Redis имеет множество исполняемых файлов. Мы сосредоточимся на сервере и командной оболочке (DOS-подобный клиент). Давайте начнем с сервера. В Windows, двойным кликом запустите `redis-server`. В *nix/MacOSX выполните команду `./redis-server` в терминале.
 
-If you read the start up message you'll see a warning that the `redis.conf` file couldn't be found. Redis will instead use built-in defaults, which is fine for what we'll be doing.
+Если вы прочитаете стартовое сообщение, вы увидите предупреждение о том, что файл `redis.conf` не обнаружен. Виесто этого Redis воспользуется настройками по умолчанию, что вполне подойдет для наших целей.
 
-Next start the Redis console by either double clicking `redis-cli` (Windows) or running `./redis-cli` (*nix/MacOSX). This will connect to the locally-running server on the default port (6379).
+Далее, запустите командную оболочку Redis двойным кликом на `redis-cli` (Windows) или командой `./redis-cli` (*nix/MacOSX). Таким образом создастся подключение к локальному серверу на 6389-м порту по умолчанию.
 
-You can test that everything is working by entering `info` into the command line interface. You'll hopefully see a bunch of key-value pairs which provide a great deal of insight into the server's status.
+Вы можете убедиться, что все работает, введя команду `info` в командную строку. Вы должны увидеть множество пар ключ-значение, которые предоставляют большое количество информации о состоянии сервера.
 
-If you are having problems with the above setup I suggest you seek help in the [official Redis support group](https://groups.google.com/forum/#!forum/redis-db).
+Если у вас возникли проблемы с выполнением описанных выше действий, я рекомендую поискать помощь в [официальной группе поддержки Redis](https://groups.google.com/forum/#!forum/redis-db).
 
 ## Redis Drivers
 
