@@ -233,7 +233,7 @@ Hashes are a good example of why calling Redis a key-value store isn't quite acc
 	hset users:goku powerlevel 9000
 	hget users:goku powerlevel
 
-We can also set multiple fields at once, get multiple fields at once, get a all fields and values, list all the fields or delete a specific field:
+We can also set multiple fields at once, get multiple fields at once, get all fields and values, list all the fields or delete a specific field:
 
 	hmset users:goku race saiyan age 737
 	hmget users:goku race powerlevel
@@ -373,7 +373,7 @@ Each member of this set is a reference to a Redis string value containing detail
 
 	sadd friends_of:chani leto paul
 
-Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance of having to do extra round trips (we briefly talked about it in the first chapter). 
+Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter). 
 
 If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient). 
 
@@ -413,7 +413,7 @@ Every Redis command is atomic, including the ones that do multiple things. Addit
 
 You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic. While one command is executing, no other command will run. (We'll briefly talk about scaling in a later chapter.) This is particularly useful when you consider that some commands do multiple things. For example:
 
-`incr` is essentially a `get` followed by a `set.`
+`incr` is essentially a `get` followed by a `set`
 
 `getset` sets a new value and returns the original
 
@@ -423,9 +423,9 @@ Although these commands are useful, you'll inevitably need to run multiple comma
 
 * The commands will be executed in order
 
-* The commands will be executed as a single atomic operation (without another client's command being executed half-way through) 
+* The commands will be executed as a single atomic operation (without another client's command being executed halfway through)
 
-* That either all or none of the commands in the transaction will be executed.
+* That either all or none of the commands in the transaction will be executed
 
 You can, and should, test this in the command line interface. Also note that there's no reason why you can't combine pipelining and transactions.
 
