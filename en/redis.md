@@ -413,7 +413,7 @@ Every Redis command is atomic, including the ones that do multiple things. Addit
 
 You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic. While one command is executing, no other command will run. (We'll briefly talk about scaling in a later chapter.) This is particularly useful when you consider that some commands do multiple things. For example:
 
-`incr` is essentially a `get` followed by a `set.`
+`incr` is essentially a `get` followed by a `set`
 
 `getset` sets a new value and returns the original
 
