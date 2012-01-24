@@ -233,7 +233,7 @@ Hashes are a good example of why calling Redis a key-value store isn't quite acc
 	hset users:goku powerlevel 9000
 	hget users:goku powerlevel
 
-We can also set multiple fields at once, get multiple fields at once, get a all fields and values, list all the fields or delete a specific field:
+We can also set multiple fields at once, get multiple fields at once, get all fields and values, list all the fields or delete a specific field:
 
 	hmset users:goku race saiyan age 737
 	hmget users:goku race powerlevel
