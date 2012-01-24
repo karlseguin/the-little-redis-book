@@ -83,9 +83,9 @@ Redis официально не поддерживает Windows, но есть 
 
 Если у вас возникли проблемы с выполнением описанных выше действий, я рекомендую поискать помощь на [официальных форумах поддержки Redis](https://groups.google.com/forum/#!forum/redis-db).
 
-## Redis Drivers
+## Драйверы Redis
 
-As you'll soon learn, Redis' API is best described as an explicit set of functions. It has a very simple and procedural feel to it. This means that whether you are using the command line tool, or a driver for your favorite language, things are very similar. Therefore, you shouldn't have any problems following along if you prefer to work from a programming language. If you want, head over to the [client page](http://redis.io/clients) and download the appropriate driver.
+Как вы скоро узнаете, API Redis лучше всего описать как явный набор функций в простом процедурном стиле. Это значит, что, используете ли вы командную оболочку или драйвер вашего любимого языка программирования, все работает одинаковым образом. Следовательно, у вас не должно возникнуть проблем, если вы решите работать посредством языка программирования.
 
 \clearpage
 
