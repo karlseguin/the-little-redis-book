@@ -502,7 +502,7 @@ Redis allows you to mark a key for expiration. You can give it an absolute time 
 
 The first command will delete the key (and associated value) after 30 seconds. The second will do the same at 12:00 a.m. December 31st, 2012.
 
-This makes Redis an ideal caching engine. You can can find out how long an item has to live until via the `ttl` command and you can remove the expiration on a key via the `persist` command:
+This makes Redis an ideal caching engine. You can find out how long an item has to live until via the `ttl` command and you can remove the expiration on a key via the `persist` command:
 
 	ttl pages:about
 	persist pages:about
