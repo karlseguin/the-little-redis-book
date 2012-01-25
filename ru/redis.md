@@ -89,17 +89,21 @@ Redis официально не поддерживает Windows, но есть 
 
 \clearpage
 
-## Chapter 1 - The Basics
+## Chapter 1 - Основа
 
-What makes Redis special? What types of problems does it solve? What should developers watch out for when using it? Before we can answer any of these questions, we need to understand what Redis is. 
+Что же делает Redis особенным? Какие типы задач он решает? На что следует обращать внимание розроботикам? Перед тем как ответить на все эти вополсы, мы дожны понять что же всетаки это такое - Redis. 
 
-Redis is often described as an in-memory persistent key-value store. I don't think that's an accurate description. Redis does hold all the data in memory (more on this in a bit), and it does write that out to disk for persistence, but it's much more than a simple key-value store. It's important to step beyond this misconception otherwise your perspective of Redis and the problems it solves will be too narrow.
+Очень часто Redis описывают как постоянное, встроенное в памьять хралище данных типу ключ-значение. Я не щитаю что это совсем точное опредиление. Redis действительно держит все данные в памьяти (пожже мы вернемся к этому), и он сбрасывает данные на диск для устойчивости от потерь, но здесь на много больше чем поросто хранилище данных типу ключ значение. Очень важно заглянуть за это недоопредиление, иначе ваши возможности с Redis и задачи которые он решает будут очень узкими.
 
-The reality is that Redis exposes five different data structures, only one of which is a typical key-value structure. Understanding these five data structures, how they work, what methods they expose and what you can model with them is the key to understanding Redis. First though, let's wrap our heads around what it means to expose data structures.
+Суть в том что Redis представляет пять разных структур данных, только одна с которых собственно и есть структурой типу ключ-значение. Понимание этих пяти структур данных, как они роботают, какие методы они представляют и что вы сможете моделиолваьть с их помощью как раз и являются ключом к пониманию Redis. Но сначала, давайте розмотрим что же всетаки значит - представление структурры данных.
+
+ Если мы применим этот концепт структуры данных к релецеонному миру, мы можем сказать что базы данных поредставлчют одну структуру данных - таблицы. 
+ Таблицы по сути сложные и гибкие. Здесь не так уж и много вещей которые вы б не смогли смоделиолвать при помощи таблиц. Тем не мение, они
 
 If we were to apply this data structure concept to the relational world, we could say that databases expose a single data structure - tables. Tables are both complex and flexible. There isn't much you can't model, store or manipulate with tables. However, their generic nature isn't without drawbacks. Specifically, not everything is as simple, or as fast, as it ought to be. What if, rather than having a one-size-fits-all structure, we used more specialized structures? There might be some things we can't do (or at least, can't do very well), but surely we'd gain in simplicity and speed?
 
 Using specific data structures for specific problems? Isn't that how we code? You don't use a hashtable for every piece of data, nor do you use a scalar variable. To me, that defines Redis' approach. If you are dealing with scalars, lists, hashes, or sets, why not store them as scalars, lists, hashes and sets? Why should checking for the existence of a value be any more complex than calling `exists(key)` or slower than O(1) (constant time lookup which won't slow down regardless of how many items there are)?
+
 
 ## The Building Blocks
 
