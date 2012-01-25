@@ -9,7 +9,7 @@ If you liked this book, maybe you'll also like [The Little MongoDB Book](http://
 The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unported license](<http://creativecommons.org/licenses/by-nc/3.0/legalcode>).
 
 ## Formats ##
-The book is written in [markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [pandoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the markdown file to help with pdf-generation (namely for the title page and to create page breaks between chapters).
+The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [pandoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the Markdown file to help with PDF-generation (namely for the title page and to create page breaks between chapters).
 
 To generate PDF, Kindle and EPUB formats, download and install [pandoc](http://johnmacfarlane.net/pandoc/), a universal document converter.
 
