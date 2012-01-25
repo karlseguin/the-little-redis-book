@@ -345,7 +345,7 @@ This is bad because it's a nightmare to manage and it takes twice the amount of 
 
 It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
 
-Using a hash, we can can remove the need for duplication:
+Using a hash, we can remove the need for duplication:
 	
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
