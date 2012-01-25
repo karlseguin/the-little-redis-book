@@ -9,12 +9,12 @@ If you liked this book, maybe you'll also like [The Little MongoDB Book](http://
 The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unported license](<http://creativecommons.org/licenses/by-nc/3.0/legalcode>).
 
 ## Formats ##
-The book is written in [markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [PanDoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the markdown file to help with pdf-generation (namely for the title page and to create page breaks between chapters).
+The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [pandoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the Markdown file to help with PDF-generation (namely for the title page and to create page breaks between chapters).
 
-Kindle and ePub format provided using [PanDoc](http://johnmacfarlane.net/pandoc/).
+To generate PDF, Kindle and EPUB formats, download and install [pandoc](http://johnmacfarlane.net/pandoc/), a universal document converter.
 
 ## Generating the PDF ##
-I use a variation of <https://github.com/claes/pandoc-templates> to generate the pdf:
+pandoc includes markdown2pdf to generate the PDF using using a variation of <https://github.com/claes/pandoc-templates>:
 
 	#!/bin/sh
 	paper=a4paper
@@ -35,6 +35,16 @@ I use a variation of <https://github.com/claes/pandoc-templates> to generate the
 	-V mainfont="$mainfont" -V sansfont="$sansfont" -V monofont="$monofont" \
 	-V geometry=$geometry -V columns=$columns -V fontsize=$fontsize \
 	-V nohyphenation=$nohyphenation en/redis.md -o redis.pdf 
+
+## Generating the EPUB ##
+Use the following command (modified from the one found at <http://news.ycombinator.com/item?id=3502033>) to generate the EPUB:
+
+	pandoc -f markdown -t epub --epub-metadata=en/metadata.xml \
+	--template=template/xetex.template -V paper=$paper \
+	-V hmargin=$hmargin -V vmargin=$vmargin -V mainfont="$mainfont" \
+	-V sansfont="$sansfont" -V monofont="$monofont" -V geometry=$geometry \
+	-V columns=$columns -V fontsize=$fontsize -V nohyphenation=$nohyphenation \
+	en/redis.md -o redis.epub
 
 ## Title Image ##
 A PSD of the title image is included. The font used is [Comfortaa](http://www.dafont.com/comfortaa.font).
