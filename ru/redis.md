@@ -5,109 +5,111 @@
 \clearpage
 \changepage{}{}{}{0.5cm}{}{-2cm}{}{}{}
 
-## About This Book
+## Об этой книге
 
-### License
+### Лицензия
 
-The Little Redis Book is licensed under the Attribution-NonCommercial 3.0 Unported license. You should not have paid for this book.
+The Little Redis Book (Маленькая книга о Redis) распространяется под лицензией Attribution-NonCommercial 3.0 Unported. Вы не обязаны платить за эту книгу.
 
-You are free to copy, distribute, modify or display the book. However, I ask that you always attribute the book to me, Karl Seguin, and do not use it for commercial purposes.
+Вы можете свободно копировать, распространять, изменять и публиковать книгу. Тем не менее, я прошу, чтобы вы всегда указывали мое, Карла Сегуина (Karl Seguin), авторство и не использовали книгу в коммерческих целях.
 
-You can see the *full text* of **the license at**:
+Полный текст лицензии вы можете найти по ссылке:
 
 <http://creativecommons.org/licenses/by-nc/3.0/legalcode>
 
-### About The Author
+### Об авторе
 
-Karl Seguin is a developer with experience across various fields and technologies. He's an active contributor to Open-Source Software projects, a technical writer and an occasional speaker. He's written various articles, as well as a few tools, about Redis. Redis powers the ranking and statistics of his free service for casual game developers: [mogade.com](http://mogade.com/).
+Карл Сегуин - разработчик, имеющий опыт работы в разных областях и с разными технологями. Активный участник проектов Открытого/Свободного ПО, технический писатель и участник различных конференций. Является автором различных статей о Redis и нескольких утилит для работы с этой системой. На Redis работает система ранжирования и статистики на его бесплатном сервисе для разработчиков казуальных игр - [mogade.com](http://mogade.com/).
 
-Karl wrote [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/), the free and popular book about MongoDB.
+Карл написал [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/), популярную бесплатную книгу о MongoDB.
 
-His blog can be found at <http://openmymind.net> and he tweets via [@karlseguin](http://twitter.com/karlseguin)
+Вы можете найти его блог по адресу <http://openmymind.net>, а также следить за ним в Twitter: [@karlseguin](http://twitter.com/karlseguin)
 
-### With Thanks To
+### Благодарности
 
-A special thanks to [Perry Neal](https://twitter.com/perryneal) for lending me his eyes, mind and passion. You provided me with invaluable help. Thank you.
+Особая благодарность выражается  Перри Нилу ([Perry Neal](https://twitter.com/perryneal)) за его зоркий взгляд, ум и страсть. Ты оказал мне неоценимую помощь. Спасибо.
 
-### Latest Version
+### Актуальная версия
 
-The latest source of this book is available at:
+Актуальная версия книги доступна по адресу:
 <http://github.com/karlseguin/the-little-redis-book>
 
 \clearpage
 
-## Introduction
+## Введение
 
-Over the last couple years, the techniques and tools used for persisting and querying data have grown at an incredible pace. While it's safe to say that relational databases aren't going anywhere, we can also say that the ecosystem around data is never going to be the same.
+За последние пару лет технологии и средства хранения и доступа к данным развивались невероятными темпами. Можно смело сказать, что реляционные базы данных не собираются исчезать, но в то же время мы видим, что экосистема вокруг данных уже никогда не будет прежней.
 
-Of all the new tools and solutions, for me, Redis has been the most exciting. Why? First because it's unbelievably easy to learn. Hours is the right unit to use when talking about length of time it takes to get comfortable with Redis. Secondly, it solves a specific set of problems while at the same time being quite generic. What exactly does that mean? Redis doesn't try to be all things to all data. As you get to know Redis, it'll become increasingly evident what does and what does not belong in it. And when it does, as a developer, it's a great experience.
+Из всех новых инструментов и решений, лично для меня, Redis оказался наиболее интересным. Почему? Во-первых, из-за невероятной простоты изучения. Час является самой подходящей единицей измерения, когда мы говорим о времени, необходимом и достаточном для ознакомления с Redis. Во-вторых, эта система решает специфический класс задач, будучи в то же время достаточно универсальной. Что это значит? Redis не пытается охватить весь спект задач, касающийся работы с данными. По мере знакомства с Redis будет все более очевидно, что может и чего не может эта система. И, если она может что-либо, для вас, как для разработчика, это будет приятным опытом.
 
-While you can build a complete system using Redis only, I think most people will find that it supplements their more generic data solution - whether that be a traditional relational database, a document-oriented system, or something else. It's the kind of solution you use to implement specific features. In that way, it's similar to an indexing engine. You wouldn't build your entire application on Lucene. But when you need good search, it's a much better experience - for both you and your users. Of course, the similarities between Redis and indexing engines end there.
+Вы можете построить целую систему, используя только Redis. Однако, я думаю, что большинство людей обнаружит, что Redis дополняет их классические решение для работы с даными, будь то реляционная СУБД, документо-ориентированная система или что-то еще. Это тот тип систем, которые вы используете для решения специфических задач. В этом смысле Redis близка к индексирующему движку. Вы не будете писать ваше приложение полностью на Lucene, но если вам нужна хорошая система поиска, она подарит вам полезный опыт. Конечно, сходства между Redis и поисковыми движками на этом заканчиваются.
 
-The goal of this book is to build the foundation you'll need to master Redis. We'll focus on learning Redis' five data structures and look at various data modeling approaches. We'll also touch on some key administrative details and debugging techniques.
+Цель этой книги состоит в описании базиса, необходимого для работы с Redis. Мы сфокусируем усилия на изучении пяти структур данных Redis и рассмотрим различные подходы к моделированию. Также, будут затронуты некоторые ключевые вопросы администрирования и отладки.
 
-## Getting Started
+## Начало работы
 
-We all learn differently: some like to get their hands dirty, some like to watch videos, and some like to read. Nothing will help you understand Redis more than actually experiencing it. Redis is easy to install and comes with a simple shell that'll give us everything we need. Let's take a couple minutes and get it up and running on our machine.
+Мы все учимся по-разному: кто-то предпочитает собственный опыт, кто-то смотрит видео, кто-то читает. Ничто не поможет вам понять Redis лучше, чем реальная работа. Redis легко устанавливается. В комплект установки входит простая командная оболочка, предоставляющая все необходимые возможности. Давайте потратим пару минут на то, чтобы установить и запустить Redis у себя на компьютере.
 
-### On Windows
+### Windows
 
-Redis doesn't officially support Windows, but there are options available. You wouldn't run these in production, but I've never experienced any limitations while doing development.
+Redis официально не поддерживает Windows, но есть возможности запустить ее на этой системе. Вы вряд ли станете так делать на рабочем сервере, но во время разработки я не сталкивался с какими-либо ограничениями.
 
-First head over to <https://github.com/dmajkic/redis/downloads> and download the most up to date version (which should be at the top of the list).
+Сначала перейдите на <https://github.com/dmajkic/redis/downloads> и скачайте последнюю версию (вверху списка).
 
-Extract the zip file and, based on your architecture, open either the `64bit` or `32bit` folder.
+Распакуйте архив и, в зависимости от архитектуры вашего компьютера, откройте директорию `64bit` или `32bit`.
 
-### On *nix and MacOSX
+### *nix и MacOSX
 
-For *nix and and Mac users, building it from source is your best option. The instructions, along with the latest version number, are available at <http://redis.io/download>. At the time of this writing the latest version is 2.4.6; to install this version we would execute:
+Для пользователей *nix и Mac, сборка Redis из исходников является лучшим вариантом. Инструкции, вместе с номером последней версии, доступны по адресу <http://redis.io/download>. На момент написания этих строк последней версией является 2.4.6. Для установки выполните:
 
 	wget http://redis.googlecode.com/files/redis-2.4.6.tar.gz
 	tar xzf redis-2.4.6.tar.gz
 	cd redis-2.4.6
 	make
 
-(Alternatively, Redis is available via various package managers. For example, MacOSX users with Homebrew installed can simply type `brew install redis`.)
+(В качестве альтернативы, Redis доступна через различные мнеджеры пакетов. Например, пользователи MacOSX с установленным Homebrew могут просто выполнить команду `brew install redis`.) (*Установка через менеджер пакетов может оказаться гораздо более удачным решением с точки зрения сохранения правильной конфигурации вашей системы - Прим. перев.*)
 
-If you built it from source, the binary outputs have been placed in the `src` directory. Navigate to the `src` directory by executing `cd src`.
+Если вы собрали систему из исходных текстов, исполняемые файлы можно найти в директории `src`. перейдите в эту директорию, введя команду `cd src`.
 
-### Running and Connecting to Redis
+### Запуск и подключение к Redis
 
-If everything worked, the Redis binaries should be available at your fingertips. Redis has a handful of executables. We'll focus on the Redis server and the Redis command line interface (a DOS-like client). Let's start the server. In Windows, double click `redis-server`. On *nix/MacOSX run `./redis-server`. 
+Если все прошло успешно, исполняемые файлы Redis должны быть в вашем распоряжении. Redis имеет множество исполняемых файлов. Мы сосредоточимся на сервере и командной оболочке (DOS-подобный клиент). Давайте начнем с сервера. В Windows, двойным кликом запустите `redis-server`. В *nix/MacOSX выполните команду `./redis-server` в терминале.
 
-If you read the start up message you'll see a warning that the `redis.conf` file couldn't be found. Redis will instead use built-in defaults, which is fine for what we'll be doing.
+Если вы прочитаете стартовое сообщение, вы увидите предупреждение о том, что файл `redis.conf` не обнаружен. Виесто этого Redis воспользуется настройками по умолчанию, что вполне подойдет для наших целей.
 
-Next start the Redis console by either double clicking `redis-cli` (Windows) or running `./redis-cli` (*nix/MacOSX). This will connect to the locally-running server on the default port (6379).
+Далее, запустите командную оболочку Redis двойным кликом на `redis-cli` (Windows) или командой `./redis-cli` (*nix/MacOSX). Таким образом создастся подключение к локальному серверу на 6389-м порту по умолчанию.
 
-You can test that everything is working by entering `info` into the command line interface. You'll hopefully see a bunch of key-value pairs which provide a great deal of insight into the server's status.
+Вы можете убедиться, что все работает, введя команду `info` в командную строку. Вы должны увидеть множество пар ключ-значение, которые предоставляют большое количество информации о состоянии сервера.
 
-If you are having problems with the above setup I suggest you seek help in the [official Redis support group](https://groups.google.com/forum/#!forum/redis-db).
+Если у вас возникли проблемы с выполнением описанных выше действий, я рекомендую поискать помощь на [официальных форумах поддержки Redis](https://groups.google.com/forum/#!forum/redis-db).
 
-## Redis Drivers
+## Драйверы Redis
 
-As you'll soon learn, Redis' API is best described as an explicit set of functions. It has a very simple and procedural feel to it. This means that whether you are using the command line tool, or a driver for your favorite language, things are very similar. Therefore, you shouldn't have any problems following along if you prefer to work from a programming language. If you want, head over to the [client page](http://redis.io/clients) and download the appropriate driver.
+Как вы скоро узнаете, API Redis лучше всего описать как явный набор функций в простом процедурном стиле. Это значит, что, используете ли вы командную оболочку или драйвер вашего любимого языка программирования, все работает одинаковым образом. Следовательно, у вас не должно возникнуть проблем, если вы решите работать посредством языка программирования.
 
 \clearpage
 
-## Chapter 1 - The Basics
+## Раздел 1 - Основы
 
-What makes Redis special? What types of problems does it solve? What should developers watch out for when using it? Before we can answer any of these questions, we need to understand what Redis is. 
+Почему же Redis такой особенный? Какие задачи он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis. 
 
-Redis is often described as an in-memory persistent key-value store. I don't think that's an accurate description. Redis does hold all the data in memory (more on this in a bit), and it does write that out to disk for persistence, but it's much more than a simple key-value store. It's important to step beyond this misconception otherwise your perspective of Redis and the problems it solves will be too narrow.
+Очень часто, Redis описывают как хранилище данных типа ключ-значение, которое постоянно находится в памяти с гарантией сохранности данных. Я не думаю, что это совсем точное определение. Redis, действительно, держит все данные в памяти (позже мы вернемся к этому), и он сбрасывает данные на диск для устойчивости к сбоям. Но он не просто хранилище данных типа ключ-значение. Очень важно ???? заглянуть за это недоопридиление, иначе ваши возможности с Redis и задачи которые он решает будут очень узкими ????.
 
-The reality is that Redis exposes five different data structures, only one of which is a typical key-value structure. Understanding these five data structures, how they work, what methods they expose and what you can model with them is the key to understanding Redis. First though, let's wrap our heads around what it means to expose data structures.
+Суть в том, что Redis предоставляет пять разных структур данных, только одна из которых собственно и есть структура типа ключ-значение. Понимание этих пяти структур данных, как они работают, какие методы они представляют для взаимодействия, и что вы сможете сделать с их помощью, как раз и являются путем к пониманию Redis. Но сначала, давайте рассмотрим что же все-таки значит - представление структуры данных.
 
-If we were to apply this data structure concept to the relational world, we could say that databases expose a single data structure - tables. Tables are both complex and flexible. There isn't much you can't model, store or manipulate with tables. However, their generic nature isn't without drawbacks. Specifically, not everything is as simple, or as fast, as it ought to be. What if, rather than having a one-size-fits-all structure, we used more specialized structures? There might be some things we can't do (or at least, can't do very well), but surely we'd gain in simplicity and speed?
+Если мы применим эту концепцию к реляционному миру, мы можем сказать, что базы данных предоставляют один тип структур данных - таблицы. Таблицы, по сути, сложные и гибкие. Существует очень мало задач, которые нельзя решить с помощью таблиц. Тем не менее, они не идеальны. А именно, они не на столько простые, или на столько быстрые, на сколько могли бы быть. Что, если вместо универсальной структуры, мы бы использовали специализированные структуры? В этом, наверное, найдутся проблемы, которые мы не сможем решить (или, по крайней мере, это решение будет спорным). Однако, в любом случае, мы выиграем на простоте и скорости.
 
-Using specific data structures for specific problems? Isn't that how we code? You don't use a hashtable for every piece of data, nor do you use a scalar variable. To me, that defines Redis' approach. If you are dealing with scalars, lists, hashes, or sets, why not store them as scalars, lists, hashes and sets? Why should checking for the existence of a value be any more complex than calling `exists(key)` or slower than O(1) (constant time lookup which won't slow down regardless of how many items there are)?
+Использование специфичных структур данных для специфичных задач? Разве это не тот подход, который мы постоянно используем при программировании? Вы не используете хэш-таблицы для всех данных программы, ???? тоже самое и с скалярными переменными ????. Я считаю, в этом и состоит подход Redis. Если вы работаете со скалярами, списками, или множествами, почему бы не хранить их как скаляры, списки, хэши и множества. Почему проверка на существование, должна быть сложнее чем просто вызов `exists(key)` или медленнее чем 0(1) (постоянное время выполнения выражения, которое не зависит от количества записей в хранилище)?
 
-## The Building Blocks
 
-### Databases
+## Составные Кирпичики
 
-Redis has the same basic concept of a database that you are already familiar with. A database contains a set of data. The typical use-case for a database is to group all of an application's data together and to keep it separate from another application's. 
+### Базы Данных
 
-In Redis, databases are simply identified by a number with the default database being number `0`. If you want to change to a different database you can do so via the `select` command. In the command line interface, type `select 1`. Redis should reply with an `OK` message and your prompt should change to something like `redis 127.0.0.1:6379[1]>`. If you want to switch back to the default database, just enter `select 0` in the command line interface..
+Redis использует знакомую всем концепцию базы данных. База данных содержит набор данных. Типичное предназначение базы данных это группирование всей информации определенного приложения в месте и изоляция ее от других приложений. 
+
+В Redis база данных идентифицируется просто числом, которое по умолчанию ровняется `0`. Если вы хотите сменить базу данных, то вы можете сделать это командой `select`. В командной строке просто введите `select 1`. Redis должен ответить сообщением `OK` и в терминале вы должны увидеть что-то типа `redis 127.0.0.1:6379[1]>`. Если вы хотите переключиться обратно на базу по умолчанию, просто введите в командной строке `select 0`.
+
 
 ### Commands, Keys and Values
 
