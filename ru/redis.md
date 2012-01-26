@@ -89,25 +89,28 @@ Redis официально не поддерживает Windows, но есть 
 
 \clearpage
 
-## Chapter 1 - The Basics
+## Раздел 1 - Основа
 
-What makes Redis special? What types of problems does it solve? What should developers watch out for when using it? Before we can answer any of these questions, we need to understand what Redis is. 
+Почему же всетаки Redis такой особенным? Какие задачи он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis. 
 
-Redis is often described as an in-memory persistent key-value store. I don't think that's an accurate description. Redis does hold all the data in memory (more on this in a bit), and it does write that out to disk for persistence, but it's much more than a simple key-value store. It's important to step beyond this misconception otherwise your perspective of Redis and the problems it solves will be too narrow.
+Очень часто, Redis описывают как постоянное, встроенное в намять хранилище данных типу ключ-значение. Я не считаю что это совсем точное определение. Redis, действительно, держит все данные в памяти (позже мы вернемся к этому), и он сбрасывает данные на диск для устойчивости от потерь, но здесь на много больше чем просто хранилище данных типу ключ значение. Очень важно заглянуть за это недоопридиление, иначе ваши возможности с Redis и задачи которые он решает будут очень узкими.
 
-The reality is that Redis exposes five different data structures, only one of which is a typical key-value structure. Understanding these five data structures, how they work, what methods they expose and what you can model with them is the key to understanding Redis. First though, let's wrap our heads around what it means to expose data structures.
+Суть в том, что Redis представляет пять разных структур данных, только одна с которых собственно и есть структурой типу ключ-значение. Понимание этих пяти структур данных, как они работают, какие методы они представляют и что вы сможете моделировать с их помощью, как раз и являются ключом к пониманию Redis. Но сначала, давайте рассмотрим что же все-таки значит - представление структуры данных.
 
-If we were to apply this data structure concept to the relational world, we could say that databases expose a single data structure - tables. Tables are both complex and flexible. There isn't much you can't model, store or manipulate with tables. However, their generic nature isn't without drawbacks. Specifically, not everything is as simple, or as fast, as it ought to be. What if, rather than having a one-size-fits-all structure, we used more specialized structures? There might be some things we can't do (or at least, can't do very well), but surely we'd gain in simplicity and speed?
+ Если, мы применим этот концепт структуры данных к реляционному миру, мы можем сказать, что базы данных представляют одну структуру данных - таблицы. 
+ Таблицы, по сути, сложные и гибкие. Здесь не так уж и много вещей которые вы б не смогли смоделировать, сохранять или манипулировать при помощи таблиц. Тем не менее, они тоже не идеальны. А именно, не все на столько простое, или на столько быстрое, на сколько оно могло б быть. Что если в место универсальной структуры, мы б использовали специализированные структуры? Здесь, наверное, найдутся вещи, которые мы не сможем сделать (или, по крайней мере, сможем сделать не совсем хорошо), но, в любом случае, мы выиграем на простоте и скорости.
 
-Using specific data structures for specific problems? Isn't that how we code? You don't use a hashtable for every piece of data, nor do you use a scalar variable. To me, that defines Redis' approach. If you are dealing with scalars, lists, hashes, or sets, why not store them as scalars, lists, hashes and sets? Why should checking for the existence of a value be any more complex than calling `exists(key)` or slower than O(1) (constant time lookup which won't slow down regardless of how many items there are)?
+Использование специфической структуры данных для специфический задач? Разве это не то как мы кодим? Вы не используете хэш-таблицы для всех данных, тоже самое и с скалярными переменными. Я считаю, это и определяет подход Redis. Если вы работаете со скалярами, списками, или сэтами, почему бы также не сохранять их как скаляры, списки, хэши и сэты. Почему проверка на существование, должна быть сложнее чем просто вызов `exists(key)` или медленнее чем 0(1) (постоянное время выполнения выражения, которое не зависит от количества записей в хранилище)?
+
 
 ## The Building Blocks
 
-### Databases
+### Базы Данных
 
-Redis has the same basic concept of a database that you are already familiar with. A database contains a set of data. The typical use-case for a database is to group all of an application's data together and to keep it separate from another application's. 
+В Redis базы данных имеют знакомый вам концепт. База данных содержит набор данных. Типичное предназначение базы данных это группирование всей информации определенного приложения в месте и изоляция ее от других приложений. 
 
-In Redis, databases are simply identified by a number with the default database being number `0`. If you want to change to a different database you can do so via the `select` command. In the command line interface, type `select 1`. Redis should reply with an `OK` message and your prompt should change to something like `redis 127.0.0.1:6379[1]>`. If you want to switch back to the default database, just enter `select 0` in the command line interface..
+В Redis базы данных идентифицируются просто числом, которое по умолчанию ровняется `0`. Если вы хотите сменить базу данных, то Вы можете делать это командой `select`. В командной строке просто введите `select 1`. Redis должен ответить сообщением `OK` и в терминале вы должны увидеть что-то типа `redis 127.0.0.1:6379[1]>`. Если вы хотите переключится обратно на базу по умолчанию, просто введите в командной строке `select 0`..
+
 
 ### Commands, Keys and Values
 
