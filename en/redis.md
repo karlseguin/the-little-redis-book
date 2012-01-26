@@ -1,3 +1,4 @@
+
 \thispagestyle{empty}
 \changepage{}{}{}{-0.5cm}{}{2cm}{}{}{}
 ![The Little Redis Book, By Karl Seguin](title.png)\ 
@@ -137,7 +138,7 @@ We'll look at more concrete examples as we move on, but it's important that we u
 
 ### Memory and Persistence
 
-We mentioned before that Redis is an in-memory persistent store. With respect to persistence, by default, Redis snapshots the database to disk based on how many keys have changed. You configure it so that if X number of keys change, then save the database every Y seconds. By default, Redis will save the database every 60 seconds if 1000 or more keys have changed all the way to 15 minutes if only a 9 keys has changed.
+We mentioned before that Redis is an in-memory persistent store. With respect to persistence, by default, Redis snapshots the database to disk based on how many keys have changed. You configure it so that if X number of keys change, then save the database every Y seconds. By default, Redis will save the database every 60 seconds if 1000 or more keys have changed all the way to 15 minutes if 9 or less keys has changed.
 
 Alternatively (or in addition to snapshotting), Redis can run in append mode. Any time a key changes, an append-only file is updated on disk. In some cases it's acceptable to lose 60 seconds worth of data, in exchange for performance, should there be some hardware or software failure. In some cases such a loss is not acceptable. Redis gives you the option. In chapter 5 we'll see a third option, which is offloading persistence to a slave.
 
@@ -345,7 +346,7 @@ This is bad because it's a nightmare to manage and it takes twice the amount of 
 
 It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
 
-Using a hash, we can can remove the need for duplication:
+Using a hash, we can remove the need for duplication:
 	
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
@@ -437,7 +438,7 @@ You can, and should, test this in the command line interface. Also note that the
 Finally, Redis lets you specify a key (or keys) to watch and conditionally apply a transaction if the key(s) changed. This is used when you need to get values and execute code based on those values, all in a transaction. With the code above, we wouldn't be able to implement our own `incr` command since they are all executed together once `exec` is called. From code, we can't do:
 
 	redis.multi()
-	current = redis.get('powerlevel)
+	current = redis.get('powerlevel')
 	redis.set('powerlevel', current + 1)
 	redis.exec()
 
@@ -502,7 +503,7 @@ Redis allows you to mark a key for expiration. You can give it an absolute time 
 
 The first command will delete the key (and associated value) after 30 seconds. The second will do the same at 12:00 a.m. December 31st, 2012.
 
-This makes Redis an ideal caching engine. You can can find out how long an item has to live until via the `ttl` command and you can remove the expiration on a key via the `persist` command:
+This makes Redis an ideal caching engine. You can find out how long an item has to live until via the `ttl` command and you can remove the expiration on a key via the `persist` command:
 
 	ttl pages:about
 	persist pages:about
