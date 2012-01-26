@@ -2,20 +2,20 @@
 
 В папке ru лежит копия английской версии для редактирования. Желающие помочь — присылайте пулл реквесты. Гитхаб позволяет редактировать документ прямо с веб-страницы.
 
-## About ##
-The Little Redis Book is a free book introducing Redis.
+## О Книге ##
+"The Building Blocks" это бесплатная книга в которой описывается Redis.
 
-The book was written by [Karl Seguin](http://openmymind.net), with [Perry Neal](http://twitter.com/perryneal)'s assistance. 
+Книга была написана [Karl Seguin](http://openmymind.net), с поддержкой [Perry Neal](http://twitter.com/perryneal)'. 
 
-If you liked this book, maybe you'll also like [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/).
+Если вам нравится эта книга, то вам также может понравится [The Little MongoDB Book](http://openmymind.net/2011/3/28/The-Little-MongoDB-Book/).
 
-## License ##
-The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unported license](<http://creativecommons.org/licenses/by-nc/3.0/legalcode>).
+## Лицензия ##
+Книга свободно роспространяется под [Attribution-NonCommercial 3.0 Unported license](<http://creativecommons.org/licenses/by-nc/3.0/legalcode>).
 
-## Formats ##
-The book is written in [markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [PanDoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the markdown file to help with pdf-generation (namely for the title page and to create page breaks between chapters).
+## Форматы ##
+Книга написана с пощью [markdown](http://daringfireball.net/projects/markdown/) и отконвертирована в PDF при помощи [PanDoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the markdown file to help with pdf-generation (namely for the title page and to create page breaks between chapters).
 
-Kindle and ePub format provided using [PanDoc](http://johnmacfarlane.net/pandoc/).
+Kindle и ePub формат предоставлен с помощью [PanDoc](http://johnmacfarlane.net/pandoc/).
 
 ## Generating the PDF ##
 I use a variation of <https://github.com/claes/pandoc-templates> to generate the pdf:
