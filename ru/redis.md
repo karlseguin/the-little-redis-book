@@ -91,7 +91,7 @@ Redis официально не поддерживает Windows, но есть 
 
 ## Раздел 1 - Основа
 
-Что же делает Redis особенным? Какие типы задач он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis. 
+Почему же всетаки Redis такой особенным? Какие задачи он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis. 
 
 Очень часто, Redis описывают как постоянное, встроенное в намять хранилище данных типу ключ-значение. Я не считаю что это совсем точное определение. Redis, действительно, держит все данные в памяти (позже мы вернемся к этому), и он сбрасывает данные на диск для устойчивости от потерь, но здесь на много больше чем просто хранилище данных типу ключ значение. Очень важно заглянуть за это недоопридиление, иначе ваши возможности с Redis и задачи которые он решает будут очень узкими.
 
@@ -105,11 +105,12 @@ Redis официально не поддерживает Windows, но есть 
 
 ## The Building Blocks
 
-### Databases
+### Базы Данных
 
-Redis has the same basic concept of a database that you are already familiar with. A database contains a set of data. The typical use-case for a database is to group all of an application's data together and to keep it separate from another application's. 
+В Redis базы данных имеют знакомый вам концепт. База данных содержит набор данных. Типичное предназначение базы данных это группирование всей информации определенного приложения в месте и изоляция ее от других приложений. 
 
-In Redis, databases are simply identified by a number with the default database being number `0`. If you want to change to a different database you can do so via the `select` command. In the command line interface, type `select 1`. Redis should reply with an `OK` message and your prompt should change to something like `redis 127.0.0.1:6379[1]>`. If you want to switch back to the default database, just enter `select 0` in the command line interface..
+В Redis базы данных идентифицируются просто числом, которое по умолчанию ровняется `0`. Если вы хотите сменить базу данных, то Вы можете делать это командой `select`. В командной строке просто введите `select 1`. Redis должен ответить сообщением `OK` и в терминале вы должны увидеть что-то типа `redis 127.0.0.1:6379[1]>`. Если вы хотите переключится обратно на базу по умолчанию, просто введите в командной строке `select 0`..
+
 
 ### Commands, Keys and Values
 
