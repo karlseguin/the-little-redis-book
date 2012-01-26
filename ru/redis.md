@@ -111,23 +111,24 @@ Redis использует знакомую всем концепцию базы
 В Redis база данных идентифицируется просто числом, которое по умолчанию ровняется `0`. Если вы хотите сменить базу данных, то вы можете сделать это командой `select`. В командной строке просто введите `select 1`. Redis должен ответить сообщением `OK` и в терминале вы должны увидеть что-то типа `redis 127.0.0.1:6379[1]>`. Если вы хотите переключиться обратно на базу по умолчанию, просто введите в командной строке `select 0`.
 
 
-### Commands, Keys and Values
+### Команды, Ключи и Значения
 
-While Redis is more than just a key-value store, at its core, every one of Redis' five data structures has at least a key and a value. It's imperative that we understand keys and values before moving on to other available pieces of information.
+Так как Redis больше чем просто хранилище данных типу ключ-значение, в его основе, каждая с пяти структура Redis имеет, как минимум, ключ и значение. Очень важно понять что такое ключи и что такое значения, перед тем, как двигаться дальше к другим доступным частям информации.
 
-Keys are how you identify pieces of data. We'll be dealing with keys a lot, but for now, it's good enough to know that a key might look like `users:leto`. One could reasonably expect such a key to contain information about a user named `leto`. The colon doesn't have any special meaning, as far as Redis is concerned, but using a separator is a common approach people use to organize their keys.
+Ключи - это то, как вы различаете части информации. Мы будем пользоваться ключами много, но пока, достаточно знать что ключ может выглядеть вот так `users:leto`. Под таким колючем разумно было б ожидать информацию о пользователе под именем `leto`. Двоеточие не имеет какого нибудь особого значения, если Redis не имеет особых надстроек, но использование разделителей является хорошим примером организации ключей.
 
-Values represent the actual data associated with the key. They can be anything. Sometimes you'll store strings, sometimes integers, sometimes you'll store serialized objects (in JSON, XML or some other format). For the most part, Redis treats values as a byte array and doesn't care what they are. Note that different drivers handle serialization differently (some leave it up to you) so in this book we'll only talk about string, integer and JSON.
+Значение - это, собственно, данные которые ассоциированы с колючем. Это может быть хоть-что. Иногда это строка, иногда целое число,
+а иногда вы сохраняете туда сериализированные (конвертированные) объекты (в JSON, XML или в любых других форматах). В основном, Redis относится к значениям как к массиву байтов и не беспокоится о том что они собой представляют. Обратите внимание что разные драйвера делают сериализацию (конвертирование) по разному (некоторые оставляют это для вас). Поэтому, здесь мы будем говорить только о строках (string), целых числах (integer) и JSON.
 
-Let's get our hands a little dirty. Enter the following command:
+Давайте запачкаем немного руки. И введем следующие команды:
 
 	set users:leto "{name: leto, planet: dune, likes: [spice]}"
 
-This is the basic anatomy of a Redis command. First we have the actual command, in this case `set`. Next we have its parameters. The `set` command takes two parameters: the key we are setting and the value we are setting it to. Many, but not all, commands take a key (and when they do, it's often the first parameter). Can you guess how to retrieve this value? Hopefully you said (but don't worry if you weren't sure!):
+Это базовая структура команд в Redis. Сначала идет сама команда, в нашем случае `set`. А потом параметры. Команда `set` принимает два параметра: ключ который мы сохраняем и значение которое связано с ним. Много, но не все, команды принимают ключ (это обычно первый параметр). А теперь угадайте как получить это значение? Наверное вы ответили (но не расстраивайтесь если вы не были уверенны):
 
 	get users:leto
 
-Go ahead and play with some other combinations. Keys and values are fundamental concepts, and the `get` and `set` commands are the simplest way to play with them. Create more users, try different types of keys, try different values.
+Теперь идите и поиграйте с другими комбинациями. Ключи и значения это основная концепция, и  простейший способ играть с ними это команды `get` и `set`. Создайте еще пользователей, попробуйте разные виды ключей и значений.
 
 ### Querying
 
