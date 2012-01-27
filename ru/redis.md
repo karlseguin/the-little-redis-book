@@ -696,7 +696,7 @@ As you start using Redis, you might wonder "how many keys can I have?". You migh
 
 Redis supports replication, which means that as you write to one Redis instance (the master), one or more other instances (the slaves) are kept up-to-date by the master. To configure a slave you use either the `slaveof` configuration setting or the `slaveof` command (instances running without this configuration are or can be masters).
 
-Redis поддерживает репликацию, которая означает, что все данные, которые попадают на один узел Redis (который называется master) будут попадать также и на другие узлы (называются slave). Для конфигурированя slave-узлов можно опцию `slaveof` или аналогичную команду (узлы, запущенные без подобных опцию являются master-узлами).
+Redis поддерживает репликацию, которая означает, что все данные, которые попадают на один узел Redis (который называется master) будут попадать также и на другие узлы (называются slave). Для конфигурирования slave-узлов можно изменить опцию `slaveof` или аналогичную по написанию команду (узлы, запущенные без подобных опций являются master-узлами).
 
 Replication helps protect your data by copying to different servers. Replication can also be used to improve performance since reads can be sent to slaves. They might respond with slightly out of date data, but for most apps that's a worthwhile tradeoff.
 
@@ -704,7 +704,7 @@ Replication helps protect your data by copying to different servers. Replication
 
 Unfortunately, Redis replication doesn't yet provide automated failover. If the master dies, a slave needs to be manually promoted. Traditional high-availability tools that use heartbeat monitoring and scripts to automate the switch are currently a necessary headache if you want to achieve some sort of high availability with Redis.
 
-К сожалению, система репликации Redis еще не поддерживает автоматическую защиту от падений. Если master-узел выходит из строя, необходимо вручную выбрать новый чреди slave-узлов. Традиционно, необходимо использовать утилиты, использующие мониторинг и специальные скрипты для переключения master-узлов, если вам необходима устойчивая к сбоям система.
+К сожалению, система репликации Redis еще не поддерживает автоматическую защиту от падений. Если master-узел выходит из строя, необходимо вручную выбрать новый из slave-узлов. Традиционно, необходимо использовать утилиты, использующие мониторинг и специальные скрипты для переключения master-узлов, если вам необходима устойчивая к сбоям система.
 
 ### Backups
 
