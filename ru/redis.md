@@ -688,7 +688,7 @@ Or you can disable a command by setting the new name to an empty string.
 
 As you start using Redis, you might wonder "how many keys can I have?". You might also wonder how many fields can a hash have (especially when you use it to organize your data), or how many elements can lists and sets have? Per instance, the practical limits for all of these is in the hundreds of millions.
 
-Когда вы начнете использовать Redis, у вас может возникнуть вопрос "как много ключей я могу использовать?". Кроме этого, вас могут интересовать ограничения на количество полей в хешах (особенно, когда вы используете их для хранения ваших данных) и колчиство элементов в списках и множествах. Для одного узла, лимиты представляют собой числа порядка сотен миллионов.
+Когда вы начнете использовать Redis, у вас может возникнуть вопрос "как много ключей я могу использовать?". Кроме этого, вас могут интересовать ограничения на количество полей в хешах (особенно, когда вы используете их для хранения ваших данных) и количество элементов в списках и множествах. Для одного узла, лимиты представляют собой числа порядка сотен миллионов.
 
 ### Replication
 
