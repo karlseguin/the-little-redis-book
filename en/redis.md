@@ -302,8 +302,6 @@ How about figuring out `chani`'s rank?
 
 We use `zrevrank` instead of `zrank` since Redis' default sort is from low to high (but in this case we are ranking from high to low). The most obvious use-case for sorted sets is a leaderboard system. In reality though, anything you want sorted by an some integer, and be able to efficiently manipulate based on that score, might be a good fit for a sorted set. 
 
-In the next chapter we'll look at how sorted sets can be used for tracking events which are time-based (where time is the score); which is another common use-case.
-
 ### In This Chapter
 
 That's a high level overview of Redis' five data structures. One of the neat things about Redis is that you can often do more than you first realize. There are probably ways to use string and sorted sets that no one has thought of yet. As long as you understand the normal use-case though, you'll find Redis ideal for all types of problems. Also, just because Redis exposes five data structures and various methods, don't think you need to use all of them. It isn't uncommon to build a feature while only using a handful of commands.
@@ -451,22 +449,6 @@ That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`
 	redis.exec()
 
 If another client changes the value of `powerlevel` after we've called `watch` on it, our transaction will fail. If no client changes the value, the set will work. We can execute this code in a loop until it works.
-
-### Time Values
-
-A slightly less common pattern that I'm fond of is using sorted sets to track time value. In Redis' documentation the sorting value is called a *score*, which might limit some people's imagination of different ways they can put it to use. 
-
-Let's say we want to track the stock prices for a symbol. Our key would be the symbol, our *score* would be the timestamp and our value the price:
-
-	redis.zadd('GOOG', Time.now.utc.to_i-100, 625.03)
-	redis.zadd('GOOG', Time.now.utc.to_i-95, 623.01)
-	redis.zadd('GOOG', Time.now.utc.to_i-95, 625.02)
-	redis.zadd('GOOG', Time.now.utc.to_i-92, 624.98)
-
-By using `zrangebyscore` we can get a range of values by a score. In our case that means getting values for a specific date range. If we wanted to get the last 5 seconds worth of prices, we could do:
-
-	redis.zrangebyscore('GOOG', (Time.now.utc - 5).to_i, Time.now.utc.to_i)
-
 
 ### Keys Anti-Pattern
 
