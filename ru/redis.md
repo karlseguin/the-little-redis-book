@@ -696,7 +696,7 @@ As you start using Redis, you might wonder "how many keys can I have?". You migh
 
 Redis supports replication, which means that as you write to one Redis instance (the master), one or more other instances (the slaves) are kept up-to-date by the master. To configure a slave you use either the `slaveof` configuration setting or the `slaveof` command (instances running without this configuration are or can be masters).
 
-Redis поддерживает репликацию, которая означает, что все данные, которые попадают на один узел Redis (который называется master) будут попадать также и на другие узлы (называются slave). Для конфигурирования slave-узлов можно изменить опцию `slaveof` или аналогичную по написанию команду (узлы, запущенные без подобных опций являются master-узлами).
+Redis поддерживает репликацию, которая означает, что все данные, которые попадают на один узел Redis (который называется master) будут попадать также и на другие узлы (называются slave). Для конфигурирования slave-узлов можно изменить опцию `slaveof` или выполнить аналогичную по написанию команду (узлы, запущенные без подобных опций являются master-узлами).
 
 Replication helps protect your data by copying to different servers. Replication can also be used to improve performance since reads can be sent to slaves. They might respond with slightly out of date data, but for most apps that's a worthwhile tradeoff.
 
