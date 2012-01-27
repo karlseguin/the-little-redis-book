@@ -179,25 +179,25 @@ The important takeaway from this chapters are:
 
 \clearpage
 
-## Chapter 2 - The Data Structures
+## Глава 2 - Структуры Данных
 
-It's time to look at Redis' five data structures. We'll explain what each data structure is, what methods are available and what type of feature/data you'd use it for.
+Пришло время взглянуть на пять структур данных Redis. Мы узнаем, чо представляет собой каждая из этих структур, какие методы к ней применимы, и для какой цели/данных вы могли бы ее использовать.
 
-The only Redis constructs we've seen so far are commands, keys and values. So far, nothing about data structures has been concrete. When we used the `set` command, how did Redis know what data structure to use? It turns out that every command is specific to a data structure. For example when you use `set` you are storing the value in a string data structure. When you use `hset` you are storing it in a hash. Given the small size of Redis' vocabulary, it's quite manageable.
+Единственными сущностями Redis, которые мы уже видели, были команды, ключи и значения. До сих пор не было сказано ничего конкретного о структурах данных. Когда мы использовали команду `set`, как Redis узнавал о том, какая структура жанных используется? Оказывается, что каждая команда является специфичной для определенной струкутры данных. Например, когда вы используете `set`, данные сохраняются в виде строки (string). Когда вы используете `hset`, вы сохраняете данные в хеше (hash). С учетом небольшого количества команд в Redis, с этим достаточно легко освоиться.
 
-**[Redis' website](http://redis.io/commands) has great reference documentation. There's no point in repeating the work they've already done. We'll only cover the most important commands needed to understand the purpose of a data structure.**
+**[Сайт Redis](http://redis.io/commands) содержит отличный справочный раздел. Нет смысла повтрорять уже проделанную работу. Мы рассмотрим только самые важные команды, необходимые для понимания предназначения каждой структуры данных.**
 
-There's nothing more important than having fun and trying things out. You can always erase all the values in your database by entering `flushdb`, so don't be shy and try doing crazy things!
+Нет ничего важнее, чем получать удовольствие, пробуя вещи на практике. ВЫ всегда можете стереть все значения в вашей базе данных, введя команду `flushdb`, поэтому не стесняйтесь и попробуйте сделать что-нибудь интересное!
 
-### Strings
+### Строки (Strings)
 
-Strings are the most basic data structures available in Redis. When you think of a key-value pair, you are thinking of strings. Don't get mixed up by the name, as always, your value can be anything. I prefer to call them "scalars", but maybe that's just me.
+Строки являются самой простой структурой данных в Redis. Когда вы думаете о паре ключ-значение, вы думаете о строках. имея уникальные имена (ключи), строковые значения могут быть какими угодно. Я предпочитаю называть их "скалярными величинами" - возможно, это только лишь мое предпочтение.
 
-We already saw a common use-case for strings, storing instances of objects by key. This is something that you'll make heavy use of:
+Мы уже видели типичный пример использования строк: хранение значений объектов с определнными ключами. Это именно то, с чем вам придется сталкиваться наиболее часто:
 
 	set users:leto "{name: leto, planet: dune, likes: [spice]}"
 
-Additionally, Redis lets you do some common operations. For example `strlen <key>` can be used to get the length of a key's value; `getrange <key> <start> <end>` returns the specified range of a value; `append <key> <value>` appends the value to the existing value (or creates it if it doesn't exist already). Go ahead and try those out. This is what I get:
+Дополнительно, Redis позволяет выполнять некоторые стандартные действия со строками. Например, `strlen <ключ>` используется для вычисления длины значения, связанного с ключом; `getrange <ключ> <начало> <конец>` возвращает подстроку из строки; `append <ключ> <значение>` добавляет введенное значение к концу существующей строки (или создает новое значение, если указаный ключ не существует). Попробуйте эти команды в действии. Вот что получилось у меня:
 
 	> strlen users:leto
 	(integer) 42
@@ -208,9 +208,9 @@ Additionally, Redis lets you do some common operations. For example `strlen <key
 	> append users:leto " OVER 9000!!"
 	(integer) 54
 
-Now, you might be thinking, that's great, but it doesn't make sense. You can't meaningfully pull a range out of JSON or append a value. You are right, the lesson here is that some of the commands, especially with the string data structure, only make sense given specific type of data.
+Сейчас вы наверное думаете, что это замечательно, но лишено смысла. С помощью этих операций невозможно (в общем случае) получить или добавить значение в JSON-строку. Вы правы - некоторые команды, особенно для работы со строками, имеют смысл только при использовании специфических форматов данных.
 
-Earlier we learnt that Redis doesn't care about your values. Most of the time that's true. However, a few string commands are specific to some types or structure of values. As a vague example, I could see the above `append` and `getrange` commands being useful in some custom space-efficient serialization. As a more concrete example I give you the `incr`, `incrby`, `decr` and `decrby` commands. These increment or decrement the value of a string:
+Ранее мы узнали, что Redis не придает смысла введенным вами значениям. Это действительно так в большинстве случаев. Тем не менее, некоторые команды специфичны для определнных структур используемых значений. В качестве грубого примера можно привести использование команд `append` и `getrange` для какого-нибудь нестандартного способа сериализации данных (*сериализация - преобразование произвольного объекта/данных в строку - прим. перев.*) Более наглядным примером будут команды `incr`, `incrby`, `decr` и `decrby`. Они служат для инкремента/декремента (увеличения/уменьшения значения) значений строк (*в примерах ниже строки в этих командах интерпретируются как числа, в связи с чем используемый автором термин "скалярные значения" имеет более точное значение, чем "строки" - прим. перев.*):
 
 	> incr stats:page:about
 	(integer) 1
@@ -222,13 +222,13 @@ Earlier we learnt that Redis doesn't care about your values. Most of the time th
 	> incrby ratings:video:12333 3
 	(integer) 8
 
-As you can imagine, Redis strings are great for analytics. Try incrementing `users:leto` (a non-integer value) and see what happens (you should get an error).
+Как вы можете догадаться, строки Redis отлично подходят для аналитики. Попробуйте инкрементировать значение `users:leto` (не-числовое) и посмотреть, что полуится (вы должны получить ошибку).
 
-A more advanced example is the `setbit` and `getbit` commands. There's a [wonderful post](http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/) on how Spool uses these two commands to efficiently answer the question "how many unique visitors did we have today". For 128 million users a laptop generates the answer in less than 50ms and takes only 16MB of memory.
+Более сложным примером будут комнады `setbit` и `getbit`. Есть [замечательный пост](http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/) о том, как Spool использует эти две команды для эффективного ответа на вопрос "сколько уникальных посетителей было у нас сегодня?" Для 128 миллионов пользователей ноутбук генерирует ответ менее чем за 50 мс и использует всего лишь 16 МБ памяти.
 
-It isn't important that you understand how bitmaps work, or how Spool uses them, but rather to understand that Redis strings are more powerful than they initially seem. Still, the most common cases are the ones we gave above: storing objects (complex or not) and counters. Also, since getting a value by key is so fast, strings are often used to cache data.
+Не так уж важно понимание того, как работают битовые маски и как Spool использует их, но важно понять, что строки в Redis являются гораздо более мощным инструментом, чем кажется на первый взгляд. тем не менее, наиболее частыми примерами использования являются те, что мы видели выше: хранение объектов (простых или сложных) и счетчиков. Кроме того, поскольку получение значения по ключу настолько быстрая операция, строки часто используются для кеширования данных.
 
-### Hashes
+### Хеши (Hashes)
 
 Hashes are a good example of why calling Redis a key-value store isn't quite accurate. You see, in a lot of ways, hashes are like strings. The important difference is that they provide an extra level of indirection: a field. Therefore, the hash equivalents of `set` and `get` are:
 
@@ -247,7 +247,7 @@ As you can see, hashes give us a bit more control over plain strings. Rather tha
 
 Looking at hashes from the perspective of a well-defined object, such as a user, is key to understanding how they work. And it's true that, for performance reasons, more granular control might be useful. However, in the next chapter we'll look at how hashes can be used to organize your data and make querying more practical. In my opinion, this is where hashes really shine.
 
-### Lists
+### Списки (Lists)
 
 Lists let you store and manipulate an array of values for a given key. You can add values to the list, get the first or last value and manipulate values at a given index. Lists maintain their order and have efficient index-based operations. We could have a `newusers` list which tracks the newest registered users to our site:
 
@@ -265,7 +265,7 @@ The above is a bit of Ruby which shows the type of multiple roundtrips we talked
 
 Of course, lists aren't only good for storing references to other keys. The values can be anything. You could use lists to store logs or track the path a user is taking through a site. If you were building a game, you might use it to track a queued user actions.
 
-### Sets
+### Множества (Sets)
 
 Set are used to store unique values and provide a number of set-based operations, like unions. Sets aren't ordered but they provide efficient value-based operations. A friend's list is the classic example of using a set:
 
@@ -287,7 +287,7 @@ and even store the result at a new key:
 
 Sets are great for tagging or tracking any other properties of a value for which duplicates don't make any sense (or where we want to apply set operations such as intersections and unions).
 
-### Sorted Sets
+### Упорядоченные Множества (Sorted Sets)
 
 The last and most powerful data structure are sorted sets. If hashes are like strings but with fields, then sorted sets are like sets but with a score. The score provides sorting and ranking capabilities. If we wanted a ranked list of friends, we might do:
 
@@ -305,7 +305,7 @@ We use `zrevrank` instead of `zrank` since Redis' default sort is from low to hi
 
 In the next chapter we'll look at how sorted sets can be used for tracking events which are time-based (where time is the score); which is another common use-case.
 
-### In This Chapter
+### В Этой Главе
 
 That's a high level overview of Redis' five data structures. One of the neat things about Redis is that you can often do more than you first realize. There are probably ways to use string and sorted sets that no one has thought of yet. As long as you understand the normal use-case though, you'll find Redis ideal for all types of problems. Also, just because Redis exposes five data structures and various methods, don't think you need to use all of them. It isn't uncommon to build a feature while only using a handful of commands.
 
