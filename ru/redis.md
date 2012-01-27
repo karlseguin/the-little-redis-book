@@ -130,13 +130,13 @@ Redis использует знакомую всем концепцию базы
 
 Теперь идите и поиграйте с другими комбинациями. Ключи и значения это основная концепция, и  простейший способ играть с ними это команды `get` и `set`. Создайте еще пользователей, попробуйте разные виды ключей и значений.
 
-### Querying
+### Запросы
 
-As we move forward, two things will become clear. As far as Redis is concerned, keys are everything and values are nothing. Or, put another way, Redis doesn't allow you to query an object's values. Given the above, we can't find the user(s) which live on planet `dune`.  
+По мере нашего продвижения вперед, две вещи станет ясно. Что ключи это - все, а значения - ничто. Или, другими словами, Redis не позволяет использовать в запросах значения объектов. С вышесказанного выплывает что мы не сможем найти пользователя который живет на планете `dune`. 
 
-For many, this is will cause some concern. We've lived in a world where data querying is so flexible and powerful that Redis' approach seems primitive and unpragmatic. Don't let it unsettle you too much. Remember, Redis isn't a one-size-fits-all solution. There'll be things that just don't belong in there (because of the querying limitations). Also, consider that in some cases you'll find new ways to model your data. 
+Для многих это может вызвать некоторые беспокойства. Мы живем в мире где запросы к базам данных на столько гибкие и мощные, что подход Redis' кажется примитивным и не практичным. Не дайте завести себя в заблуждение. Redis не является универсальным решением на все случаи жизни. Здесь есть вещи которые просто не решаются с помощью Redis (из-за ограничений в запросах). Также примите к сведению, что в некоторых случаях, вы найдете новые способы создания модели данных.
 
-We'll look at more concrete examples as we move on, but it's important that we understand this basic reality of Redis. It helps us understand why values can be anything - Redis never needs to read or understand them. Also, it helps us get our minds thinking about modeling in this new world.
+Мы россмотрим более конкретные примеры по мере продвижения, но очень важно чтобы мы понимали эти базовые принципы Redis. Это позволит понять, как значение может быть важным - в то время как Redis не нужно читать или понимать его. Также это поможет нам научится как строить модель данных в этом новом мире.
 
 ### Memory and Persistence
 
