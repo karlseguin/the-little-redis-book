@@ -679,22 +679,42 @@ It isn't uncommon to disable both snapshotting and the append-only file (aof) on
 
 ### Scaling and Redis Cluster
 
+### Масштабирование и Redis Cluster
+
 Replication is the first tool a growing site can leverage. Some commands are more expensive than others (`sort` for example) and offloading their execution to a slave can keep the overall system responsive to incoming queries.
+
+Репликация является первым инструментом, который используют при росте нагрузке на систему. Некоторые команды являются более дорогостоящими, чем другие (например `sort`). Такие запросы предпочтительно выполнять не на master-узлах, а на slave. В этом случае удастся сохранять общую отзывчивость системы.
 
 Beyond this, truly scaling Redis comes down to distributing your keys across multiple Redis instances (which could be running on the same box, remember, Redis is single-threaded). For the time being, this is something you'll need to take care of (although a number of Redis drivers do provide consistent-hashing algorithms). Thinking about your data in terms of horizontal distribution isn't something we can cover in this book. It's also something you probably won't have to worry about for a while, but it's something you'll need to be aware of regardless of what solution you use.
 
-The good news is that work is under way on Redis Cluster. Not only will this offer horizontal scaling, including rebalancing, but it'll also provide automated failover for high availability. 
+Помимо этого, по-настоящему масштабируемый Redis использует распределение ключей между несколькими узлами Redis (которые могут быть запущены в той же системе - как мы помним, Redis однопоточный). В настоящее время, это то, над чем приходится заботится нам (хотя ряд драйверов предоставляют ???? consistent-hashing algorithms ????). Мы не может покрыть в этой книге вопросы, касающиеся работы с данными в ракурсе горизонтального масштабирования. Тем более, вам скорее всего не придется беспокоится о подобных вещах, однако стоит быть вкурсе независимо от того, какое решение вы используете.
+
+The good news is that work is under way on Redis Cluster. Not only will this offer horizontal scaling, including rebalancing, but it'll also provide automated failover for high availability.
+
+Хорошей новостью является то, что ведется работа над Redis Cluster. Это решение предоставит не только возможность горизонтального масштабирования, включая автоматическую балансировку нагрузки, но также решения в плане отказоустойчивости.
 
 High availability and scaling is something that can be achieved today, as long as you are willing to put the time and effort into it. Moving forward, Redis Cluster should make things much easier.
 
+Высокая отказоустойчивость и масштабируемость может быть достигнута уже сегодня, но вам придется вложить некоторое количество времени и усилий в это. В конечном счете, Redis Cluster должен сделать эти вещи гораздо более простыми.
+
 ### In This Chapter
 
+### Обобщение
+
 Given the number of projects and sites using Redis already, there can be no doubt that Redis is production-ready, and has been for a while. However, some of the tooling, especially around security and availability is still young. Redis Cluster, which we'll hopefully see soon, should help address some of the current management challenges.
+
+Учитывая количество проектов, уже использующих Redis, не может быть никаких сомнений, что эта система является ???? production-ready ????. Однако, некоторые из инструментов, особенно касающиеся безопасности и отказоустойчивости все еще требуют доработки. Redis Cluster, который мы надеемся увидеть в ближайшее время, должен помочь решить некоторые из существующих проблем администрирования.
 
 \clearpage
 
 ## Conclusion
 
+## Заключение
+
 In a lot of ways, Redis represents a simplification in the way we deal with data. It peels away much of the complexity and abstraction available in other systems. In many cases this makes Redis the wrong choice. In others it can feel like Redis was custom-built for your data.
 
+Redis использует множество способов облегчить наше взаимодействие с данными. Эта система убирает большую часть сложности и абстракции, присущих другим системам. Во многих случаях это делает Redis неудачным выбором. Но в других случаях может показаться, что Redis был написан для решения вашей конкретной проблемы.
+
 Ultimately it comes back to something I said at the very start: Redis is easy to learn. There are many new technologies and it can be hard to figure out what's worth investing time into learning. When you consider the real benefits Redis has to offer with its simplicity, I sincerely believe that it's one of the best investments, in terms of learning, that you and your team can make.
+
+В конечном итоге мы вернулись к тому, что я говорил в самом начале: Redis прост в освоении. Когда вокруг так много новых технологий, не просто понять, что стоит времени на обучение. Когда вы ощутите реальное преимущество, которое Redis может предложить, я уверен, что у вас не останется вопросов о том, уделять ли время на изучение Redis.
