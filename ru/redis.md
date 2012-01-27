@@ -716,7 +716,7 @@ Backing up Redis is simply a matter of copying Redis' snapshot to whatever locat
 
 It isn't uncommon to disable both snapshotting and the append-only file (aof) on the master and let a slave take care of this. This helps reduce the load on the master and lets you set more aggressive saving parameters on the slave without hurting overall system responsiveness.
 
-Допускается отключение сохранения данных на диск у master-узлов. Можно доверить эти действия slave-узлам. Данный шаг уменьшает нагрузку на master-узлел и позволяет slave-узлам использовать более агрессивные настройки сохранения данных, но не затрагивая общую отзывчивость системы.
+Допускается отключение сохранения данных на диск у master-узлов. Можно доверить эти действия slave-узлам. Данный шаг уменьшает нагрузку на master-узел и позволяет slave-узлам использовать более агрессивные настройки сохранения данных, но не затрагивая общую отзывчивость системы.
 
 ### Scaling and Redis Cluster
 
