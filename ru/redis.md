@@ -744,7 +744,7 @@ High availability and scaling is something that can be achieved today, as long a
 
 Given the number of projects and sites using Redis already, there can be no doubt that Redis is production-ready, and has been for a while. However, some of the tooling, especially around security and availability is still young. Redis Cluster, which we'll hopefully see soon, should help address some of the current management challenges.
 
-Учитывая количество проектов, уже использующих Redis, не может быть никаких сомнений, что эта система является ???? production-ready ????. Однако, некоторые из инструментов, особенно касающиеся безопасности и отказоустойчивости все еще требуют доработки. Redis Cluster, который мы надеемся увидеть в ближайшее время, должен помочь решить некоторые из существующих проблем администрирования.
+Учитывая количество проектов, уже использующих Redis, не может быть никаких сомнений, что эта система является ???? production-ready ????. Однако, некоторые из инструментов, особенно касающиеся безопасности и отказоустойчивости, все еще требуют доработки. Redis Cluster, который мы надеемся увидеть в ближайшее время, должен помочь решить некоторые из существующих проблем администрирования.
 
 \clearpage
 
