@@ -467,25 +467,24 @@ Redis также поддерживает конвейрную обработк�
 
 	redis.zrangebyscore('GOOG', (Time.now.utc - 5).to_i, Time.now.utc.to_i)
 
-### Keys Anti-Pattern
+### Анти-Шаблон Использования Ключей
 
-In the next chapter we'll talk about commands that aren't specifically related to data structures. Some of these are administrative or debugging tools. But there's one I'd like to talk about in particular: the `keys` command. This command takes a pattern and finds all the matching keys. This command seems like it's well suited for a number of tasks, but it should never be used in production code. Why? Because it does a linear scan through all the keys looking for matches. Or, put simply, it's slow.
+В следующей главе мы поговорим о командах, не относящихся непосредственно к структурам данных. Некоторые из них служат для администрирования и отладки. Но есть одна, о которой я бы хотел упомянуть отдельно - `keys`. Эта команда принимает шаблон и находит все ключи, соответствующие ему. Эта команда кажется подходящей для определенного рода задач, но ее не следует использовать в готовом приложении. Почему? Потому что она осуществляет линейный поиск совпадений с шаблоном по всем ключам. Проще говоря, она медленная.
 
-How do people try and use it? Say you are building a hosted bug tracking service. Each account will have an `id` and you might decide to store each bug into a string value with a key that looks like `bug:account_id:bug_id`. If you ever need to find all of an account's bugs (to display them, or maybe delete them if they delete their account), you might be tempted (as I was!) to use the `keys` command:
+Как же ее используют? Допустим, вы создаете веб-приложения для баг-трекинга (отслеживания ошибок). Каждая учетная запись будет иметь идентификатор `id_аккаунта` и вы можете решить хранить кажду ошибку в строковом значении с ключом в формате `bug:id_аккаунта:id_ошибки`. Если вам когда-нибудь понадобится найти все ошибки для определенной учетной записи (для отображение или удаления в случае удаления учетной записи), вы, возможно, будете (как я когда-то) использовать команду `keys`:
 
 	keys bug:1233:*
 
-The better solution is to use a hash. Much like we can use hashes to provide a way to expose secondary indexes, so too can we use them to organize our data:
+Лучшим решением будет использование хеша. Так же, как мы можем использовать хеши в качестве вторичного индекса, мы можем использовать их для организации данных:
 
 	hset bugs:1233 1 "{id:1, account: 1233, subject: '...'}"
 	hset bugs:1233 2 "{id:2, account: 1233, subject: '...'}"
 
-To get all the bug ids for an account we simply call `hkeys bugs:1233`. To delete a specific bug we can do `hdel bugs:1233 2` and to delete an account we can delete the key via `del bugs:1233`.
+Для получения идентификаторов всех ошибок для заданной учетной записи мы просто вызовем `hkeys bugs:1233`. Для удаления определенной ошибки мы можем использовать `hdel bugs:1233 2`, а для удаления учетной записи со всеми данными - `del bugs:1233`.
 
+### В Этой Главе
 
-### In This Chapter
-
-This chapter, combined with the previous one, has hopefully given you some insight on how to use Redis to power real features. There are a number of other patterns you can use to build all types of things, but the real key is to understand the fundamental data structures and to get a sense for how they can be used to achieve things beyond your initial perspective.
+Надеюсь, что эта глава вместе с предыдущей дали вам основы для понимания того, как использовать Redis для реализации полезных возможностей. Есть и другие шаблоны, которые вы можете использовать для построения приложений другого типа, но суть здесь состоит в понимании фундаментальных структур данных и того, как они могут быть использованы для достижения того, что лежит за пределами того, что вы изначально могли себе вообразить.
 
 \clearpage
 
