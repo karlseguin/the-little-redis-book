@@ -380,25 +380,25 @@ The important takeaway from this chapters are:
 
 Необходимость ручного управления ссылками в Redis огорчает. Но, все первоначальные опасения о влиянии на производительность и потребление памяти должны быть проверены на практике. Я думаю, вы обнаружите, что это не такая уж большая проблема.
 
-### Round Trips and Pipelining
+### Дополнительные Запросы и Конвейерная Обработка
 
-We already mentioned that making frequent trips to the server is a common pattern in Redis. Since it is something you'll do often, it's worth taking a closer look at what features we can leverage to get the most out of it.
+Мы уже упоминали, что частые обращения к серверу являются типичными при использовании Redis. Поскольку это делается часто, будет полезно узнать больше о возможностях, которые мы можем использовать для получения наилучших результатов.
 
-First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values:
+Прежде всего, команды или принимают один или более параметров, или имеют родственные команды, которые принимают несколько параметров. Ранее мы видели команду `mget`, принимающую несколько ключей и возвращающую их значения:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
 
-Or the `sadd` command which adds 1 or more members to a set:
+Или команда `sadd`, добавляющая одно или более значений к множеству:
 
 	sadd friends:vladimir piter
 	sadd friends:paul jessica leto "leto II" chani
 
-Redis also supports pipelining. Normally when a client sends a request to Redis it waits for the reply before sending the next request. With pipelining you can send a number of requests without waiting for their responses. This reduces the networking overhead and can result in significant performance gains.
+Redis также поддерживает конвейрную обработку. Обычно, когда клиентское приложние посылает запрос к Redis, оно ждет ответа, прежде чем послать следующий запрос. С конвейерной обработкой вы можете посылать несколько запросов без ожидания момента, когда они вернут результат. Это снижает накладные расходы обмена данными по сети и может значительно увеличить производительность.
 
-It's worth noting that Redis will use memory to queue up the commands, so it's a good idea to batch them. How large a batch you use will depend on what commands you are using, and more specifically, how large the parameters are. But, if you are issuing commands against ~50 character keys, you can probably batch them in thousands or tens of thousands.
+Для Redis ничего не стоит использовать память для создания очереди запросов, поэтому хорошей идеей будет группировать запросы. Насколько большим будет используемый вами пакет запросов зависит от того, какие команды вы используете, и , что более важно, каков размер их параметров. Но, если вы используете команды с длиной параметров примерно в 50 символов, вы, вероятно, можете группировать их тысячами или десятками тысяч.
 
-Exactly how you execute commands within a pipeline will vary from driver to driver. In Ruby you pass a block to the `pipelined` method:
+То, как именно вы исполняете команды в конвейере, будет зависеть от используемого драйвера. В Ruby вы передаете блок в метод `pipelined`:
 
 	redis.pipelined do
 	  9001.times do
@@ -406,7 +406,7 @@ Exactly how you execute commands within a pipeline will vary from driver to driv
 	  end
 	end
 
-As you can probably guess, pipelining can really speed up a batch import!
+Как вы можете догадаться, конвейреная обработка может значительно ускорить импортирование пакета запросов!
 
 ### Transactions
 
