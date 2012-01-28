@@ -362,23 +362,23 @@ The important takeaway from this chapters are:
 
 Это то, чем вы, скорее всего, будете пользоваться очень часто. Для меня это как раз тот случай, когда хеши особенно хороши, но это не очевидный способ использования, пока вы не увидите это своими глазами.
 
-### References and Indexes
+### Ссылки и Индексы
 
-We've seen a couple examples of having one value reference another. We saw it when we looked at our list example, and we saw it in the section above when using hashes to make querying a little easier. What this comes down to is essentially having to manually manage your indexes and references between values. Being honest, I think we can say that's a bit of a downer, especially when you consider having to manage/update/delete these references manually. There is no magic solution to solving this problem in Redis.
+Мы рассмотрели пару примеров, где одно значение ссылается на другое. Мы видели это, когда смотрели на пример со списком, и мы видели это в разделе выше, когда использовали хеши для того, чтобы сделать запросы немного проще. Это в итоге приводит к необходимости ручного управления индексами и ссылками между значениями. Честно говоря, можно назвать это недостатком, особенно когда вы столкнетесь с необходимостью управлять этими ссылками, обновлять и удалять их вручную. В Redis нет магического решения этой проблемы.
 
-We already saw how sets are often used to implement this type of manual index:
+Мы уже видели, как множества часто используются для реализации ручного индекса:
 
 	sadd friends:leto ghanima paul chani jessica
 
-Each member of this set is a reference to a Redis string value containing details on the actual user. What if `chani` changes her name, or deletes her account? Maybe it would make sense to also track the inverse relationships:
+Каждый элемент этого множества является ссылкой на строковое значение, содержащее информацию о пользователе. А что, если `chani` изменит свое имя или удалит учетную запись? Может быть, имеет смысл хранить обратные взаимосвязи:
 
 	sadd friends_of:chani leto paul
 
-Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter).
+Не беря в расчет сложность поддержки такой структуры, если вы похожи на меня, вы, вероятно, испугаетесь дополнительных расходов памяти и времени обработки таких дополниельных индексных значений. В следующем разделе мы поговорим о путях снижения затрат производительности, возникающих из-за необходимости дополнительных обращений к базе даннх (мы кратко упоминали об этом в первой главе).
 
-If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient).
+Если вы задумаетесь об этом, то поймете, что реляционные базы данных также имеют эти накладные расходы. Индексы занимают память, должны сканироваться и затем соответсвующие записи должны извлекаться. От накладных расходов ловко абстрагируются (и делается множетсво оптимизаций для того, чтобы сделать обработку максимально эффективной).
 
-Again, having to manually deal with references in Redis in unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
+Необходимость ручного управления ссылками в Redis огорчает. Но, все первоначальные опасения о влиянии на производительность и потребление памяти должны быть проверены на практике. Я думаю, вы обнаружите, что это не такая уж большая проблема.
 
 ### Round Trips and Pipelining
 
