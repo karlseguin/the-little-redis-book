@@ -1,6 +1,6 @@
 \thispagestyle{empty}
 \changepage{}{}{}{-0.5cm}{}{2cm}{}{}{}
-![The Little Redis Book, By Karl Seguin](title.png)\ 
+![The Little Redis Book, By Karl Seguin](title.png)\
 
 \clearpage
 \changepage{}{}{}{0.5cm}{}{-2cm}{}{}{}
@@ -89,9 +89,9 @@ Redis официально не поддерживает Windows, но есть 
 
 \clearpage
 
-## Раздел 1 - Основы
+## Глава 1 - Основы
 
-Почему же Redis такой особенный? Какие задачи он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis. 
+Почему же Redis такой особенный? Какие задачи он решает? На что следует обращать внимание разработчикам? Перед тем, как ответить на все эти вопросы, мы должны понять, что же все-таки это такое - Redis.
 
 Очень часто Redis описывают как хранилище данных типа ключ-значение, которое постоянно находится в памяти с гарантией сохранности данных. Я не думаю, что это совсем точное определение. Redis, действительно, держит все данные в памяти (позже мы вернемся к этому), и он сбрасывает данные на диск для устойчивости к сбоям. Но он не просто хранилище данных типа ключ-значение. Очень важно разобраться в этом неточном определении. В противном случае, мы не сможем раскрыть всех возможностей Redis.
 
@@ -106,7 +106,7 @@ Redis официально не поддерживает Windows, но есть 
 
 ### Базы Данных
 
-Redis использует знакомую всем концепцию базы данных. База данных содержит набор данных. Типичное предназначение базы данных - это группирование всей информации определенного приложения в месте и изоляция ее от других приложений. 
+Redis использует знакомую всем концепцию базы данных. База данных содержит набор данных. Типичное предназначение базы данных - это группирование всей информации определенного приложения в месте и изоляция ее от других приложений.
 
 В Redis база данных идентифицируется просто числом, которое по умолчанию равняется `0`. Если вы хотите сменить базу данных, то вы можете сделать это командой `select`. В командной строке просто введите `select 1`. Redis должен ответить сообщением `OK` и в терминале вы должны увидеть что-то типа `redis 127.0.0.1:6379[1]>`. Если вы хотите переключиться обратно на базу по умолчанию, просто введите в командной строке `select 0`.
 
@@ -131,7 +131,7 @@ Redis использует знакомую всем концепцию базы
 
 ### Запросы
 
-По мере нашего знакомства с Redis, мы поймем две вещи. Ключи это - все, а значения - ничто. Или, другими словами, Redis не позволяет использовать в запросах значения объектов. С вышесказанного выплывает то, что мы не сможем найти пользователя который живет на планете `dune`. 
+По мере нашего знакомства с Redis, мы поймем две вещи. Ключи это - все, а значения - ничто. Или, другими словами, Redis не позволяет использовать в запросах значения объектов. С вышесказанного выплывает то, что мы не сможем найти пользователя который живет на планете `dune`.
 
 Для многих это может вызвать некоторые беспокойства. Мы живем в мире где запросы к базам данных столь гибкие и мощные, что подход Redis кажется примитивным и неудобным. Не дайте завести себя в заблуждение. Redis не является универсальным решением на все случаи жизни. Существуют проблемы, которые просто не решаются с помощью Redis (из-за ограничений в запросах). Также стоит принять к сведению, что в некоторых случаях, вы найдете другие способы смоделировать ваши данные.
 
@@ -143,11 +143,11 @@ We mentioned before that Redis is an in-memory persistent store. With respect to
 
 Alternatively (or in addition to snapshotting), Redis can run in append mode. Any time a key changes, an append-only file is updated on disk. In some cases it's acceptable to lose 60 seconds worth of data, in exchange for performance, should there be some hardware or software failure. In some cases such a loss is not acceptable. Redis gives you the option. In chapter 5 we'll see a third option, which is offloading persistence to a slave.
 
-With respect to memory, Redis keeps all your data in memory. The obvious implication of this is the cost of running Redis: RAM is still the most expensive part of server hardware. 
+With respect to memory, Redis keeps all your data in memory. The obvious implication of this is the cost of running Redis: RAM is still the most expensive part of server hardware.
 
 I do feel that some developers have lost touch with how little space data can take. The Complete Works of William Shakespeare takes roughly 5.5MB of storage. As for scaling, other solutions tend to be IO- or CPU-bound. Which limitation (RAM or IO) will require you to scale out to more machines really depends on the type of data and how you are storing and querying it. Unless you're storing large multimedia files in Redis, the in-memory aspect is probably a non-issue. For apps where it is an issue you'll likely be trading being IO-bound for being memory bound.
 
-Redis did add support for virtual memory. However, this feature has been seen as a failure (by Redis' own developers) and its use has been deprecated. 
+Redis did add support for virtual memory. However, this feature has been seen as a failure (by Redis' own developers) and its use has been deprecated.
 
 (On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.
 
@@ -155,9 +155,9 @@ Redis did add support for virtual memory. However, this feature has been seen as
 
 We've touched on a number of high level topics. The last thing I want to do before diving into Redis is bring some of those topics together. Specifically, query limitations, data structures and Redis' way to store data in memory.
 
-When you add those three things together you end up with something wonderful: speed. Some people think "Of course Redis is fast, everything's in memory." But that's only part of it. The real reason Redis shines versus other solutions is its specialized data structures. 
+When you add those three things together you end up with something wonderful: speed. Some people think "Of course Redis is fast, everything's in memory." But that's only part of it. The real reason Redis shines versus other solutions is its specialized data structures.
 
-How fast? It depends on a lot of things - which commands you are using, the type of data, and so on. But Redis' performance tends to be measured in tens of thousands, or hundreds of thousands of operations **per second**. You can run `redis-benchmark` (which is in the same folder as the `redis-server` and `redis-cli`) to test it out yourself. 
+How fast? It depends on a lot of things - which commands you are using, the type of data, and so on. But Redis' performance tends to be measured in tens of thousands, or hundreds of thousands of operations **per second**. You can run `redis-benchmark` (which is in the same folder as the `redis-server` and `redis-cli`) to test it out yourself.
 
 I once changed code which used a traditional model to using Redis. A load test I wrote took over 5 minutes to finish using the relational model. It took about 150ms to complete in Redis. You won't always get that sort of massive gain, but it hopefully gives you an idea of what we are talking about
 
@@ -165,7 +165,7 @@ It's important to understand this aspect of Redis because it impacts how you int
 
 ### In This Chapter
 
-Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves. 
+Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves.
 
 The important takeaway from this chapters are:
 
@@ -179,63 +179,63 @@ The important takeaway from this chapters are:
 
 \clearpage
 
-## Chapter 2 - The Data Structures
+## Глава 2 - Структуры Данных
 
-It's time to look at Redis' five data structures. We'll explain what each data structure is, what methods are available and what type of feature/data you'd use it for.
+Пришло время взглянуть на пять структур данных Redis. Мы узнаем, что представляет собой каждая из этих структур, какие методы к ней применимы, и для какой цели/данных вы могли бы ее использовать.
 
-The only Redis constructs we've seen so far are commands, keys and values. So far, nothing about data structures has been concrete. When we used the `set` command, how did Redis know what data structure to use? It turns out that every command is specific to a data structure. For example when you use `set` you are storing the value in a string data structure. When you use `hset` you are storing it in a hash. Given the small size of Redis' vocabulary, it's quite manageable.
+Единственными сущностями Redis, которые мы уже видели, были команды, ключи и значения. До сих пор не было сказано ничего конкретного о структурах данных. Когда мы использовали команду `set`, как Redis узнавал о том, какая структура данных используется? Оказывается, что каждая команда является специфичной для определенной струкутры данных. Например, когда вы используете `set`, данные сохраняются в виде строки (string). Когда вы используете `hset`, вы сохраняете данные в хеше (hash). С учетом небольшого количества команд в Redis, к этому достаточно просто привыкнуть.
 
-**[Redis' website](http://redis.io/commands) has great reference documentation. There's no point in repeating the work they've already done. We'll only cover the most important commands needed to understand the purpose of a data structure.**
+**[Сайт Redis](http://redis.io/commands) содержит отличный справочный раздел. Нет смысла повторять уже проделанную работу. Мы рассмотрим только самые важные команды, необходимые для понимания предназначения каждой структуры данных.**
 
-There's nothing more important than having fun and trying things out. You can always erase all the values in your database by entering `flushdb`, so don't be shy and try doing crazy things!
+Нет ничего важнее, чем получать удовольствие от практики и экспериментов. Вы всегда можете стереть все значения в вашей базе данных, введя команду `flushdb`, поэтому не стесняйтесь и попробуйте сделать что-нибудь интересное!
 
-### Strings
+### Строки (Strings)
 
-Strings are the most basic data structures available in Redis. When you think of a key-value pair, you are thinking of strings. Don't get mixed up by the name, as always, your value can be anything. I prefer to call them "scalars", but maybe that's just me.
+Строки являются самой простой структурой данных в Redis. Когда вы думаете о паре ключ-значение, вы думаете о строках. Имея уникальные имена (ключи), строковые значения могут быть какими угодно. Я предпочитаю называть их "скалярными величинами" - возможно, это только лишь мое предпочтение.
 
-We already saw a common use-case for strings, storing instances of objects by key. This is something that you'll make heavy use of:
+Мы уже видели типичный пример использования строк: хранение значений объектов с определнными ключами. Это именно то, с чем вам придется сталкиваться наиболее часто:
 
 	set users:leto "{name: leto, planet: dune, likes: [spice]}"
 
-Additionally, Redis lets you do some common operations. For example `strlen <key>` can be used to get the length of a key's value; `getrange <key> <start> <end>` returns the specified range of a value; `append <key> <value>` appends the value to the existing value (or creates it if it doesn't exist already). Go ahead and try those out. This is what I get:
-	
+Дополнительно, Redis позволяет выполнять некоторые стандартные действия со строками. Например, `strlen <ключ>` используется для вычисления длины значения, связанного с ключом; `getrange <ключ> <начало> <конец>` возвращает подстроку из строки; `append <ключ> <значение>` добавляет введенное значение к концу существующей строки (или создает новое значение, если указаный ключ не определен). Попробуйте эти команды в действии. Вот что получилось у меня:
+
 	> strlen users:leto
 	(integer) 42
-	
+
 	> getrange users:leto 27 40
 	"likes: [spice]"
-	
+
 	> append users:leto " OVER 9000!!"
 	(integer) 54
 
-Now, you might be thinking, that's great, but it doesn't make sense. You can't meaningfully pull a range out of JSON or append a value. You are right, the lesson here is that some of the commands, especially with the string data structure, only make sense given specific type of data. 
+Сейчас вы наверное думаете, что это, конечно, замечательно, но лишено смысла. С помощью этих операций невозможно (в общем случае) получить или добавить значение в JSON-строку. Вы правы - некоторые команды, особенно для работы со строками, имеют смысл только при использовании специфических форматов данных.
 
-Earlier we learnt that Redis doesn't care about your values. Most of the time that's true. However, a few string commands are specific to some types or structure of values. As a vague example, I could see the above `append` and `getrange` commands being useful in some custom space-efficient serialization. As a more concrete example I give you the `incr`, `incrby`, `decr` and `decrby` commands. These increment or decrement the value of a string:
+Ранее мы узнали, что Redis не придает смысла введенным вами значениям. Это действительно так в большинстве случаев. Тем не менее, некоторые команды специфичны для определенных структур используемых значений. В качестве грубого примера можно привести использование команд `append` и `getrange` для какого-нибудь нестандартного способа сериализации данных (*сериализация - преобразование произвольного объекта/данных в строку - прим. перев.*) Более наглядным примером будут команды `incr`, `incrby`, `decr` и `decrby`. Они служат для инкремента/декремента (увеличения/уменьшения значения) значений строк (*в примерах ниже строки в этих командах интерпретируются как числа, в связи с чем используемый автором термин "скалярные значения" (scalars) имеет более точное значение, чем "строки" - прим. перев.*):
 
 	> incr stats:page:about
 	(integer) 1
 	> incr stats:page:about
 	(integer) 2
-	
+
 	> incrby ratings:video:12333 5
 	(integer) 5
 	> incrby ratings:video:12333 3
 	(integer) 8
 
-As you can imagine, Redis strings are great for analytics. Try incrementing `users:leto` (a non-integer value) and see what happens (you should get an error).
+Как вы можете догадаться, строки Redis отлично подходят для аналитики. Попробуйте инкрементировать значение `users:leto` (не-числовое) и посмотреть, что полуится (вы должны получить ошибку).
 
-A more advanced example is the `setbit` and `getbit` commands. There's a [wonderful post](http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/) on how Spool uses these two commands to efficiently answer the question "how many unique visitors did we have today". For 128 million users a laptop generates the answer in less than 50ms and takes only 16MB of memory. 
+Более сложным примером будут комнады `setbit` и `getbit`. Есть [замечательный пост](http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/) о том, как Spool использует эти две команды для эффективного ответа на вопрос "сколько уникальных посетителей было у нас сегодня?" Для 128 миллионов пользователей ноутбук генерирует ответ менее чем за 50 мс и использует всего лишь 16 МБ памяти.
 
-It isn't important that you understand how bitmaps work, or how Spool uses them, but rather to understand that Redis strings are more powerful than they initially seem. Still, the most common cases are the ones we gave above: storing objects (complex or not) and counters. Also, since getting a value by key is so fast, strings are often used to cache data.
+Не так уж важно понимание того, как работают битовые маски и как Spool использует их, но важно понять, что строки в Redis являются гораздо более мощным инструментом, чем кажется на первый взгляд. тем не менее, наиболее частыми примерами использования являются те, что мы видели выше: хранение объектов (простых или сложных) и счетчиков. Кроме того, поскольку получение значения по ключу настолько быстрая операция, строки часто используются для кеширования данных.
 
-### Hashes
+### Хеши (Hashes)
 
-Hashes are a good example of why calling Redis a key-value store isn't quite accurate. You see, in a lot of ways, hashes are like strings. The important difference is that they provide an extra level of indirection: a field. Therefore, the hash equivalents of `set` and `get` are:
+Хеши - хороший пример того, почему называть Redis хранилищем пар ключ-значение не совсем корректно. Хеши во многом похожи на строки. Важным отличием является то, что они предоставляют дополнительный уровень адресации данных - поля (fields). Эквивалентами команд `set` и `get` для хешей являются:
 
 	hset users:goku powerlevel 9000
 	hget users:goku powerlevel
 
-We can also set multiple fields at once, get multiple fields at once, get all fields and values, list all the fields or delete a specific field:
+Мы также можем устанавливать значения сразу нескольких полей, получать все поля со значениями, выводить список всех полей и удалять отдельные поля:
 
 	hmset users:goku race saiyan age 737
 	hmget users:goku race powerlevel
@@ -243,71 +243,71 @@ We can also set multiple fields at once, get multiple fields at once, get all fi
 	hkeys users:goku
 	hdel users:goku age
 
-As you can see, hashes give us a bit more control over plain strings. Rather than storing a user as a single serialized value, we could use a hash to get a more accurate representation. The benefit would be the ability to pull and update/delete specific pieces of data, without having to get or write the entire value. 
+Как вы видите, хеши дают чуть больше контроля, чем строки. Вместо того, чтобы хранить данные о пользователе в виде одного сериализованного значения, мы можем использовать хеш для более точного представления. Преимуществом будет возможность извлечения, изменения и удаления отдельных частей данных без необходимости читать и записывать все значение целиком.
 
-Looking at hashes from the perspective of a well-defined object, such as a user, is key to understanding how they work. And it's true that, for performance reasons, more granular control might be useful. However, in the next chapter we'll look at how hashes can be used to organize your data and make querying more practical. In my opinion, this is where hashes really shine.
+Рассматривая хеши как детально определяемые объекты, такие как данные пользователя, важно понимать, как хеши работают. И это действительно правда, что более точный контроль может быть полезен для повышения производительности. Тем не менее, в следующей главе мы увидим, как хеши могут использоваться для организации ваших данных и удобства запросов к ним. Мне кажется, что именно в этом хеши особенно хороши.
 
-### Lists
+### Списки (Lists)
 
-Lists let you store and manipulate an array of values for a given key. You can add values to the list, get the first or last value and manipulate values at a given index. Lists maintain their order and have efficient index-based operations. We could have a `newusers` list which tracks the newest registered users to our site:
+Списки позволяют хранить и манипулировать массивами значений для заданного ключа. Можно добавлять значения в список, получать первое и последнее значение из списка и манипулировать значениями с заданными индексами. Списки сохраняют порядок своих значений и имеют эффективные операции с использованием индексов. Мы можем создать список `newusers`, содержащий последних зарегистрировавшихся на нашем сайте пользователей:
 
 	rpush newusers goku
 	ltrim newusers 0 50
 
-First we push a new user at the front of the list, then we trim it so that it only contains the last 50 users. This is a common pattern. `ltrim` is an O(N) operation, where N is the number of values we are removing. In this case, where we always trim after a single insert, it'll actually have a constant performance of O(1) (because N will always be equal to 1).
+Сначала мы добавляем нового пользователя в начало списка, затем укорачиваем список так, чтобы он содержал 50 последних пользователей. Это типичный пример использования. Операция `ltrim` имеет асимпотическую сложность O(N), где N - число значений, которое мы удаляем. В этом случае, если мы всегда укорачиеваем список после каждой единичной вставки, эта операция имеет постоянную производительность O(1) (потому что N всегда будет равным единице).
 
-This is also the first time that we are seeing a value in one key referencing a value in another. If we wanted to get the details of the last 10 users, we'd do the following combination:
+Это первый раз, когда мы видим, что значение с одним ключом ссылается на значение с другим ключом. Если мы хотим получить сведения о последних 10 пользователях, мы должны сделать следующее:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
 
-The above is a bit of Ruby which shows the type of multiple roundtrips we talked about before.
+Приведенные выше код на языке Ruby показывает случай многократного обращения к базе данных, о котором мы говорили выше.
 
-Of course, lists aren't only good for storing references to other keys. The values can be anything. You could use lists to store logs or track the path a user is taking through a site. If you were building a game, you might use it to track a queued user actions.
+Конечно, списки хороши не только для хранения ссылок на другие ключи. Значения могут быть чем угодно. Можно использовать списки для хранения записей журнала или пути, по которому пользователь перемещается по вашему сайту. Если вы создаете игру, вы можете использовать список для хранения последовательности действий пользователя.
 
-### Sets
+### Множества (Sets)
 
-Set are used to store unique values and provide a number of set-based operations, like unions. Sets aren't ordered but they provide efficient value-based operations. A friend's list is the classic example of using a set:
+Множества используются для хранения уникальных значений и предоставляют набор операций - таких, как объединение. Множества не упорядочены, но предоставляют эффективные операции со значениями. Список друзей является классическим примером использования множеств:
 
 	sadd friends:leto ghanima paul chani jessica
 	sadd friends:duncan paul jessica alia
 
-Regardless of how many friends a user has, we can efficiently tell (O(1)) whether userX is a friend of userY or not
+Независимо от того, сколько друзей имеет пользователь, мы можем эффективно (O(1)) определить, являются ли пользователи userX и userY друзьями, или нет.
 
 	sismember friends:leto jessica
 	sismember friends:leto vladimir
 
-Furthermore we can see what two or more people share the same friends:
+Более того, мы можем узнать, имеют ли два пользователя общих друзей:
 
 	sinter friends:leto friends:duncan
 
-and even store the result at a new key:
+и даже сохранить результат этой операции под новым ключом:
 
 	sinterstore friends:leto_duncan friends:leto friends:duncan
 
-Sets are great for tagging or tracking any other properties of a value for which duplicates don't make any sense (or where we want to apply set operations such as intersections and unions).
+Множества отлично подходят для теггинга (*tagging, присвоение семанитических ярлыков/меток - прим. перев.*) и отслеживания любых других свойств, для которых повторы не имеют смысла (или там, где мы хотим использовать операции над множествами, такие как пересечение и объединение).
 
-### Sorted Sets
+### Упорядоченные Множества (Sorted Sets)
 
-The last and most powerful data structure are sorted sets. If hashes are like strings but with fields, then sorted sets are like sets but with a score. The score provides sorting and ranking capabilities. If we wanted a ranked list of friends, we might do:
+Последней и самой мощной структурой данных являются упорядоченные множества. Если хеши похожи на строки, но имеют поля, то упорядоченные множества похожи на множества, но имеют счетчики. Счетчики предоставляют возможности упорядочивания и ранжирования. Если мы хотим получить ранжированный список друзей, мы можем сделать следующее:
 
 	zadd friends:leto 100 ghanima 95 paul 95 chani 75 jessica 1 vladimir
 
-Want to find out how many friends `leto` has with a rank of 90 or over?
+Хотим узнать, сколько друзей с рейтингом 90 и выше имеет пользователь `leto`?
 
 	zcount friends:leto 90 100
 
-How about figuring out `chani`'s rank?
+Как насчет рейтинга `chani`?
 
 	zrevrank friends:leto chani
 
-We use `zrevrank` instead of `zrank` since Redis' default sort is from low to high (but in this case we are ranking from high to low). The most obvious use-case for sorted sets is a leaderboard system. In reality though, anything you want sorted by an some integer, and be able to efficiently manipulate based on that score, might be a good fit for a sorted set. 
+Мы используем `zrevrank` вместо `zrank`, поскольку по умолчанию в Redis сортировка происходит от меньшего к большему (мы ранжируем от большего к меньшему). Самым очевидным примером использования упорядоченных множеств являются системы рейтингов. На самом деле упорядоченные множества подойдут для любых случаев, когда вы имеете значения, которые вы хотите упорядочить, используя для этого целочисленные "весовые коэффициенты", и которыми вы хотите управлять на основании этих коэффициентов.
 
-In the next chapter we'll look at how sorted sets can be used for tracking events which are time-based (where time is the score); which is another common use-case.
+В следующей главе мы увидим как упорядоченные множества могут использоваться для отслеживания событий, основанных на времени (когда время используется в качестве весового коэффициента), что является другим типичным примером использования упорядоченных множеств.
 
-### In This Chapter
+### В Этой Главе
 
-That's a high level overview of Redis' five data structures. One of the neat things about Redis is that you can often do more than you first realize. There are probably ways to use string and sorted sets that no one has thought of yet. As long as you understand the normal use-case though, you'll find Redis ideal for all types of problems. Also, just because Redis exposes five data structures and various methods, don't think you need to use all of them. It isn't uncommon to build a feature while only using a handful of commands.
+Вы обзорно познакомились с пятью структурами данных Redis. Одна из замечательных особенностей Redis состоит в том, что вы можете сделать больше, чем вам показалось на первый взгляд. Вероятно, есть способы использования строк и упорядоченных множеств, о которых еще никто не догадался. Тем не менее, понимая стандартные способы их использования, вы сможете использовать Redis для решения любых типов задач. Кроме того, нет нужды использовать все структуры даных и операции над ними только потому, что Redis дает такую возможность. Не так уж редко многие задачи решаются весьма ограниченным набором команд.
 
 \clearpage
 
@@ -348,7 +348,7 @@ This is bad because it's a nightmare to manage and it takes twice the amount of 
 It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
 
 Using a hash, we can can remove the need for duplication:
-	
+
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
 
@@ -365,7 +365,7 @@ This is something that you'll likely end up doing often. To me, this is where ha
 
 ### References and Indexes
 
-We've seen a couple examples of having one value reference another. We saw it when we looked at our list example, and we saw it in the section above when using hashes to make querying a little easier. What this comes down to is essentially having to manually manage your indexes and references between values. Being honest, I think we can say that's a bit of a downer, especially when you consider having to manage/update/delete these references manually. There is no magic solution to solving this problem in Redis. 
+We've seen a couple examples of having one value reference another. We saw it when we looked at our list example, and we saw it in the section above when using hashes to make querying a little easier. What this comes down to is essentially having to manually manage your indexes and references between values. Being honest, I think we can say that's a bit of a downer, especially when you consider having to manage/update/delete these references manually. There is no magic solution to solving this problem in Redis.
 
 We already saw how sets are often used to implement this type of manual index:
 
@@ -375,17 +375,17 @@ Each member of this set is a reference to a Redis string value containing detail
 
 	sadd friends_of:chani leto paul
 
-Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter). 
+Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter).
 
-If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient). 
+If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient).
 
 Again, having to manually deal with references in Redis in unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
 
-### Round Trips and Pipelining 
+### Round Trips and Pipelining
 
 We already mentioned that making frequent trips to the server is a common pattern in Redis. Since it is something you'll do often, it's worth taking a closer look at what features we can leverage to get the most out of it.
 
-First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values: 
+First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
@@ -395,7 +395,7 @@ Or the `sadd` command which adds 1 or more members to a set:
 	sadd friends:vladimir piter
 	sadd friends:paul jessica leto "leto II" chani
 
-Redis also supports pipelining. Normally when a client sends a request to Redis it waits for the reply before sending the next request. With pipelining you can send a number of requests without waiting for their responses. This reduces the networking overhead and can result in significant performance gains. 
+Redis also supports pipelining. Normally when a client sends a request to Redis it waits for the reply before sending the next request. With pipelining you can send a number of requests without waiting for their responses. This reduces the networking overhead and can result in significant performance gains.
 
 It's worth noting that Redis will use memory to queue up the commands, so it's a good idea to batch them. How large a batch you use will depend on what commands you are using, and more specifically, how large the parameters are. But, if you are issuing commands against ~50 character keys, you can probably batch them in thousands or tens of thousands.
 
@@ -421,7 +421,7 @@ You might not know it, but Redis is actually single-threaded, which is how every
 
 `setnx` first checks if the key exists, and only sets the value if it does not
 
-Although these commands are useful, you'll inevitably need to run multiple commands as an atomic group. You do so by first issuing the `multi` command, followed by all the commands you want to execute as part of the transaction, and finally executing `exec` to actually execute the commands or `discard` to throw away, and not execute the commands. What guarantee does Redis make about transactions? 
+Although these commands are useful, you'll inevitably need to run multiple commands as an atomic group. You do so by first issuing the `multi` command, followed by all the commands you want to execute as part of the transaction, and finally executing `exec` to actually execute the commands or `discard` to throw away, and not execute the commands. What guarantee does Redis make about transactions?
 
 * The commands will be executed in order
 
@@ -455,7 +455,7 @@ If another client changes the value of `powerlevel` after we've called `watch` o
 
 ### Time Values
 
-A slightly less common pattern that I'm fond of is using sorted sets to track time value. In Redis' documentation the sorting value is called a *score*, which might limit some people's imagination of different ways they can put it to use. 
+A slightly less common pattern that I'm fond of is using sorted sets to track time value. In Redis' documentation the sorting value is called a *score*, which might limit some people's imagination of different ways they can put it to use.
 
 Let's say we want to track the stock prices for a symbol. Our key would be the symbol, our *score* would be the timestamp and our value the price:
 
@@ -485,7 +485,7 @@ The better solution is to use a hash. Much like we can use hashes to provide a w
 To get all the bug ids for an account we simply call `hkeys bugs:1233`. To delete a specific bug we can do `hdel bugs:1233 2` and to delete an account we can delete the key via `del bugs:1233`.
 
 
-### In This Chapter	
+### In This Chapter
 
 This chapter, combined with the previous one, has hopefully given you some insight on how to use Redis to power real features. There are a number of other patterns you can use to build all types of things, but the real key is to understand the fundamental data structures and to get a sense for how they can be used to achieve things beyond your initial perspective.
 
@@ -497,7 +497,7 @@ While the five data structures form the foundation of Redis, there are other com
 
 ### Expiration
 
-Redis allows you to mark a key for expiration. You can give it an absolute time in the form of a Unix timestamp (seconds since January 1, 1970) or a time to live in seconds. This is a key-based command, so it doesn't matter what type of data structure the key represents. 
+Redis allows you to mark a key for expiration. You can give it an absolute time in the form of a Unix timestamp (seconds since January 1, 1970) or a time to live in seconds. This is a key-based command, so it doesn't matter what type of data structure the key represents.
 
 	expire pages:about 30
 	expireat pages:about 1356933600
@@ -559,7 +559,7 @@ For each command you entered you should see four parameters:
 
 * The command and its parameters
 
-The slow log is maintained in memory, so running it in production, even with a low threshold, shouldn't be a problem. By default it will track the last 1024 logs. 
+The slow log is maintained in memory, so running it in production, even with a low threshold, shouldn't be a problem. By default it will track the last 1024 logs.
 
 ### Sort
 
@@ -623,7 +623,7 @@ Over large sets, `sort` can be slow. The good news is that the output of a `sort
 Combining the `store` capabilities of `sort` with the expiration commands we've already seen makes for a nice combo.
 
 
-### In This Chapter 
+### In This Chapter
 
 This chapter focused on non-data structure-specific commands. Like everything else, their use is situational. It isn't uncommon to build an app or feature that won't make use of expiration, publication/subscription and/or sorting. But it's good to know that they are there. Also, we only touched on some of the commands. There are more, and once you've digested the material in this book it's worth going through the [full list](http://redis.io/commands).
 
@@ -653,7 +653,7 @@ Since the file is well-documented, we won't be going over the settings.
 
 Конфигурационный файл содержит множество комментариев, поэтому мы не будем рассматривать настройки.
 
-In addition to configuring Redis via the `redis.conf` file, the `config set` command can be used to set individual values. In fact, we already used it when setting the `slowlog-log-slower-than` setting to 0. 
+In addition to configuring Redis via the `redis.conf` file, the `config set` command can be used to set individual values. In fact, we already used it when setting the `slowlog-log-slower-than` setting to 0.
 
 Кроме конфигурирования Redis через файл `redis.conf`, команда `config set` может быть использована для задания конкретных опций. Мы уже использовали ее, когда устанавливали параметр `slowlog-log-slower-than` в 0.
 
@@ -675,7 +675,7 @@ Once a client is authenticated, they can issue any command against any database.
 
 Как только клиент проходит авторизацию, он может выполнять любые команды. В том числе команду `flushall`, которая удаляет все ключи из базы. У вас есть возможность переименовать команды для обеспечения определенного уровня защиты:
 
-	rename-command CONFIG 5ec4db169f9d4dddacbfb0c26ea7e5ef	
+	rename-command CONFIG 5ec4db169f9d4dddacbfb0c26ea7e5ef
 	rename-command FLUSHALL 1041285018a942a4922cbf76623b741e
 
 Or you can disable a command by setting the new name to an empty string.
