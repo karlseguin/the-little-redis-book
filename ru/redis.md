@@ -575,20 +575,20 @@ Redis позволяет вам назначать ключам срок сущ�
 
 	sadd watch:leto 12339 1382 338 9338
 
-It might make perfect sense to sort these by id (which the default sort will do), but we'd also like to have these sorted by severity. To do so, we tell Redis what pattern to sort by. First, let's add some more data so we can actually see a meaningful result:
+Удобно будет сортировать по идентификатору (что по умолчанию и произойдет), но нам также хотелось бы сортировать по важности. Чтобы это сделать, мы указываем Redis, по какому шаблону сортировать. Сначала, давайте добавим больше данных, чтобы увидеть значимые результат:
 
 	set severity:12339 3
 	set severity:1382 2
 	set severity:338 5
 	set severity:9338 4
 
-To sort the bugs by severity, from highest to lowest, you'd do:
+Чтобы отсортировать ошибки по важности от более важных к менее важным, выполните:
 
 	sort watch:leto by severity:* desc
 
-Redis will substitute the `*` in our pattern (identified via `by`) with the values in our list/set/sorted set. This will create the key name that Redis will query for the actual values to sort by.
+Redis подставит значения из нашего списка (множества, упорядоченного множества) вместо `*` в указанном шаблоне. Это создаст имена ключей, по которым Redis будет запрашивать значения для сортировки.
 
-Although you can have millions of keys within Redis, I think the above can get a little messy. Thankfully sort can also work on hashes and their fields. Instead of having a bunch of top-level keys you can leverage hashes:
+Хотя вы можете иметь миллионы ключей в Redis, я думаю, что пример выше может стать несколько загроможденным. К счастью, сортировка может также работать на хешах и их полях. Вместо того, чтобы иметь кучу ключей верхнего уровня, вы можете использовать хеши:
 
 	hset bug:12339 severity 3
 	hset bug:12339 priority 1
@@ -606,22 +606,21 @@ Although you can have millions of keys within Redis, I think the above can get a
 	hset bug:9338 priority 2
 	hset bug:9338 details "{id: 9338, ....}"
 
-Not only is everything better organized, and we can sort by `severity` or `priority`, but we can also tell `sort` what field to retrieve:
+Теперь все не только лучше организовано и мы имеем возможность сортировать по `severity` и `priority`, но мы также можем указать команде `sort`, значения каких полей извлекать:
 
 	sort watch:leto by bug:*->priority get bug:*->details
 
-The same value substitution occurs, but Redis also recognizes the `->` sequence and uses it to look into the specified field of our hash. We've also included the `get` parameter, which also does the substitution and field lookup, to retrieve bug details.
+Подстановка значений осталась прежней, но теперь Redis также распознает последовательность `->` и будет использовать ее для обращения к определенному полю хеша. Мы также включили параметр `get`, который также используется в подстановке и поиске значения поля, для извлечения подробных сведений (details) об ошибке.
 
-Over large sets, `sort` can be slow. The good news is that the output of a `sort` can be stored:
+На больших множествах `sort` может быть медленной. Хорошо, что возвращаемое командой `sort` значение может быть сохранено:
 
 	sort watch:leto by bug:*->priority get bug:*->details store watch_by_priority:leto
 
-Combining the `store` capabilities of `sort` with the expiration commands we've already seen makes for a nice combo.
+Комбинирование возможности сохранения (параметр `store`) команды `sort` с указанием срока существования, который обсуждался выше, будет отличным решением.
 
+### В Этой Главе
 
-### In This Chapter
-
-This chapter focused on non-data structure-specific commands. Like everything else, their use is situational. It isn't uncommon to build an app or feature that won't make use of expiration, publication/subscription and/or sorting. But it's good to know that they are there. Also, we only touched on some of the commands. There are more, and once you've digested the material in this book it's worth going through the [full list](http://redis.io/commands).
+Эта глава посвящена командам, не связанным со структурами данных. Как и везде, их использование ситуативно. Не так уж редки случаи построение приложений, не использующих указание срока существования, публикации сообщений и подписки, сортировки. Но полезно знать, что такие возможности существуют. Кроме того, мы рассмотрели лишь несколько команд. Кроме них есть и другие, и когда вы усвоите материал в этой книге, имеет смысл ознакомиться с [полным списком](http://redis.io/commands).
 
 \clearpage
 
