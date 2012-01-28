@@ -510,24 +510,23 @@ Redis позволяет вам назначать ключам срок сущ�
 
 	setex pages:about 30 '<h1>about us</h1>....'
 
-### Publication and Subscriptions
+### Публикация Сообщений и Подписка
 
-Redis lists have an `blpop` and `brpop` command which returns and removes the first (or last) element from the list or blocks until one is available. These can be used to power a simple queue.
+Списки в Redis имеют команды `blpop` и `brpop`, которые возвращают и удаляют, соответственно, первый и последний элементы списка, или же блокируют список, пока указанные элементы в нем не появятся. Это может быть использовано для создания простой очереди.
 
-Beyond this, Redis has first-class support for publishing messages and subscribing to channels. You can try this out yourself by opening a second `redis-cli` window. In the first window subscribe to a channel (we'll call it `warnings`):
+Более того, Redis поддерживает публикацию сообщений и подписку на каналы как объекты первого класса. (*То есть с эти объекты можно создавать, изменять, удалять и т.д. - прим. перев.*) Вы можете сами попробовать это, запустив вторую копию `redis-cli` в другом окне. В первом окне подпишемся на канал (назовем его `warnings`):
 
 	subscribe warnings
 
-The reply is the information of your subscription. Now, in the other window, publish a message to the `warnings` channel:
+Ответом будет информаци о подписке. Теперь, в другом окне, опубликуем сообщение в канал `warnings`:
 
 	publish warnings "it's over 9000!"
 
-If you go back to your first window you should have received the message to the `warnings` channel.
+Если вы вернетесь в певрое окно, вы должны увидеть сообщение, полученное через канала `warnings`.
 
-You can subscribe to multiple channels (`subscribe channel1 channel2 ...`), subscribe to a pattern of channels (`psubscribe warnings:*`) and use the `unsubscribe` and `punsubscribe` commands to stop listening to one or more channels, or a channel pattern.
+Можно подписываться на несколько каналов (`subscribe channel1 channel2 ...`), подписываться на каналы, названия которых подходят под шаблон (`psubscribe warnings:*`) и использовать команды `unsubscribe` и `punsubscribe` для прекращения подписки на один и более канал.
 
-Finally, notice that the `publish` command returned the value 1. This indicates the number of clients that received the message.
-
+Наконец, обратите внимание, что команда `publish` вернула значение 1. Это значение показывает число клиентов, получивших сообщение.
 
 ### Monitor and Slow Log
 
