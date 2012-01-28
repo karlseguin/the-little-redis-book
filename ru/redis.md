@@ -647,7 +647,7 @@ When you first launched the Redis server, it warned you that the `redis.conf` fi
 
 **This is the config file for Redis 2.4.6. You should replace "2.4.6" in the above URL with your version. You can find your version by running the `info` command and looking at the first value.**
 
-** Это конфигурационный файл для Redis 2.4.6. Вы должны заменить "2.4.6" в приведенном выше URL на номер вашей версии. Вы можете узнать вашу версию, выполнив команду `info`.**
+**Это конфигурационный файл для Redis 2.4.6. Вы должны заменить "2.4.6" в приведенном выше URL на номер вашей версии. Вы можете узнать вашу версию, выполнив команду `info`.**
 
 Since the file is well-documented, we won't be going over the settings.
 
