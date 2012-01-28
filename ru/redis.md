@@ -408,41 +408,41 @@ Redis также поддерживает конвейрную обработк�
 
 Как вы можете догадаться, конвейреная обработка может значительно ускорить импортирование пакета запросов!
 
-### Transactions
+### Транзакции
 
-Every Redis command is atomic, including the ones that do multiple things. Additionally, Redis has support for transactions when using multiple commands.
+Каждая команда Redis атомарна, включая команды, которые делают несколько вещей. Дополнительно, Redis поддерживает транзакции при использовании нескольких команд.
 
-You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic. While one command is executing, no other command will run. (We'll briefly talk about scaling in a later chapter.) This is particularly useful when you consider that some commands do multiple things. For example:
+Возможно, вы знаете, что Redis на самом деле работает в один поток, благодаря чему и гарантируется атомарность (неделимость) каждой команды. Пока исполняется одна команда, остальные не могут быть исполнены. (Мы кратко обсудим масштабирование позже.) Это бывает полезно, когда речь идет о командах, делающих несколько вещей. Например:
 
-`incr` is essentially a `get` followed by a `set`
+`incr` - это, по сути, `get` за которой следует `set`
 
-`getset` sets a new value and returns the original
+`getset` устанавливает новое значение и возвращает старое
 
-`setnx` first checks if the key exists, and only sets the value if it does not
+`setnx` сначала проверяет, существует ли ключ, и устанавливает значение только в том случае, если ключ не существовал
 
-Although these commands are useful, you'll inevitably need to run multiple commands as an atomic group. You do so by first issuing the `multi` command, followed by all the commands you want to execute as part of the transaction, and finally executing `exec` to actually execute the commands or `discard` to throw away, and not execute the commands. What guarantee does Redis make about transactions?
+Несмотря на то, что эти команды полезны, вам неизбежно понадобится исполнять несколько команд как атомарную группу. Вы можете это сделать, вызвав сначала команду `multi`, за которой следуют команды, которые вы хотите выполнить как часть транзакции, и в конце вызвав команду `exec` для того, чтобы выполнить команды, или `discard`, чтобы отменить их выполнение. Какие гарантии дает Redis касательно транзакций?
 
-* The commands will be executed in order
+* Команды исполнятся по порядку
 
-* The commands will be executed as a single atomic operation (without another client's command being executed halfway through)
+* Команды исполнятся как единая, неделимая операция (никакая другая команда не будет исполнена в ходе выполнения транзакции)
 
-* That either all or none of the commands in the transaction will be executed
+* Будут выполнены либо все команда транзакции, либо ни одна из них
 
-You can, and should, test this in the command line interface. Also note that there's no reason why you can't combine pipelining and transactions.
+Вы можете, и должны, попробовать это в командной строке. Также обратите внимание, что нет причин отказываться от использования конвейрной обработки и транзакций вместе.
 
 	multi
 	hincrby groups:1percent balance -9000000000
 	hincrby groups:99percent balance 9000000000
 	exec
 
-Finally, Redis lets you specify a key (or keys) to watch and conditionally apply a transaction if the key(s) changed. This is used when you need to get values and execute code based on those values, all in a transaction. With the code above, we wouldn't be able to implement our own `incr` command since they are all executed together once `exec` is called. From code, we can't do:
+Наконец, Redis позволяет указывать ключ (или ключи) для отслеживания изменений, и применять транзакцию, если ключ(и) изменился(-лись). Это используется, когда вам нужно получить значения и исполнить код в зависимости от них в одной транзакции. В коде выше мы не смогли бы реализовать собственную команду `incr`, поскольку все команды исполняются вместе, когда вызывается `exec`. Мы не можем сделать так:
 
 	redis.multi()
 	current = redis.get('powerlevel)
 	redis.set('powerlevel', current + 1)
 	redis.exec()
 
-That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`, we can do:
+Транзакции в Redis работают иначе. Но, если мы добавим `watch` к `powerlevel`, мы сможем сделать следующее:
 
 	redis.watch('powerlevel')
 	current = redis.get('powerlevel')
@@ -450,7 +450,7 @@ That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`
 	redis.set('powerlevel', current + 1)
 	redis.exec()
 
-If another client changes the value of `powerlevel` after we've called `watch` on it, our transaction will fail. If no client changes the value, the set will work. We can execute this code in a loop until it works.
+Если другой клиент изменит значение ключа `powerlevel` после того, как мы вызвали `watch` для этого ключа, наша транзакция не будет исполнена. Если же значение не изменится, все сработает. мы можем исполнять этот код в цикле, пока он не сработает.
 
 ### Time Values
 
