@@ -230,12 +230,12 @@ The important takeaway from this chapters are:
 
 ### Хеши (Hashes)
 
-Hashes are a good example of why calling Redis a key-value store isn't quite accurate. You see, in a lot of ways, hashes are like strings. The important difference is that they provide an extra level of indirection: a field. Therefore, the hash equivalents of `set` and `get` are:
+Хеши - хороший пример того, почему называть Redis хранилищем пар ключ-значение не совсем корректно. Хеши во многом похожи на строки. Важным отличием является то, что они предоставляют дополнительный уровень адресации данных - поля (fields). Следовательно, эквивалентами команд `set` и `get` для хешей являются:
 
 	hset users:goku powerlevel 9000
 	hget users:goku powerlevel
 
-We can also set multiple fields at once, get multiple fields at once, get all fields and values, list all the fields or delete a specific field:
+Мы также можем устанавливать значения сразу нескольких полей, получить все поля со значениями, выводить список всех полей и удалять отдельные поля:
 
 	hmset users:goku race saiyan age 737
 	hmget users:goku race powerlevel
@@ -243,71 +243,71 @@ We can also set multiple fields at once, get multiple fields at once, get all fi
 	hkeys users:goku
 	hdel users:goku age
 
-As you can see, hashes give us a bit more control over plain strings. Rather than storing a user as a single serialized value, we could use a hash to get a more accurate representation. The benefit would be the ability to pull and update/delete specific pieces of data, without having to get or write the entire value.
+Как вы видите, хеши дают чуть больше контроля, чем строки. Вместо того, чтобы хранить данные о пользователе в виде одного сериализованного значения, мы можем использовать хеш для более точного представления. Преимуществом будет возможность извлечения, изменения и удаления отдельных частей данных без необходимости читать и записывать все значение целиком.
 
-Looking at hashes from the perspective of a well-defined object, such as a user, is key to understanding how they work. And it's true that, for performance reasons, more granular control might be useful. However, in the next chapter we'll look at how hashes can be used to organize your data and make querying more practical. In my opinion, this is where hashes really shine.
+Рассматривая хеши как детально определяемые объекты, такие как данные пользователя, важно понимать, как хеши работают. И это действительно правда, что более точный контроль может быть полезен для повышения производительности. Тем не менее, в следующей главе мы увидим, как хеши могут использоваться для организации ваших данных и удобства запросов к ним. Мне кажется, что именно в этом хеши особенно хороши.
 
 ### Списки (Lists)
 
-Lists let you store and manipulate an array of values for a given key. You can add values to the list, get the first or last value and manipulate values at a given index. Lists maintain their order and have efficient index-based operations. We could have a `newusers` list which tracks the newest registered users to our site:
+Списки позволяют хранить и манипулировать массивами значений для заданного ключа. Можно добавлять значения в список, получить первое и последнее значение из списка и манипулировать значениями с заданными индексами. Списки сохраняют порядок своих значений и имеют эффективные операции с использованием индексов. Мы можем создать список `newusers`, содержащий последних зарегистрировавшихся на нашем сайте пользователей:
 
 	rpush newusers goku
 	ltrim newusers 0 50
 
-First we push a new user at the front of the list, then we trim it so that it only contains the last 50 users. This is a common pattern. `ltrim` is an O(N) operation, where N is the number of values we are removing. In this case, where we always trim after a single insert, it'll actually have a constant performance of O(1) (because N will always be equal to 1).
+Сначала мы добавляем новго пользователя в начало списка, затем укорачиваем список так, чтобы он содержал 50 последних пользователей. Это типичный пример использования. Операция `ltrim` имеет асимпотическую сложность O(N), где N - число значений, которое мы удаляем. В этом случае, если мы всегда укорачиеваем список после каждой единичной вставки, эта операция имеет постоянную производительность O(1) (потому что N всегда будет равно 1).
 
-This is also the first time that we are seeing a value in one key referencing a value in another. If we wanted to get the details of the last 10 users, we'd do the following combination:
+Это первый раз, когда мы видим, что значение с одним ключом ссылается на значение с другим ключом. Если мы хотим получить сведения о последних 10 пользователях, мы должны сделать следующее:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
 
-The above is a bit of Ruby which shows the type of multiple roundtrips we talked about before.
+Приведенные выше код на языке Ruby показывает случай многократного обращения к базе данных, о котором мы говорили выше.
 
-Of course, lists aren't only good for storing references to other keys. The values can be anything. You could use lists to store logs or track the path a user is taking through a site. If you were building a game, you might use it to track a queued user actions.
+Конечно, списки хороши не только для хранения ссылок на другие ключи. Значения могут быть чем угодно. Можно использовать списки для хранения записей журнала или пути, по которому пользователь перемещается по вашему сайту. Если вы создаете игру, вы можете использовать это для хранения последовательности действий пользователя.
 
 ### Множества (Sets)
 
-Set are used to store unique values and provide a number of set-based operations, like unions. Sets aren't ordered but they provide efficient value-based operations. A friend's list is the classic example of using a set:
+Множества используются для хранения уникальных значений и предоставляют набор операций над собой, таких, как объединение. Множества не упорядочены, но предоставляют эффективные операции со значениями. Список друзей является классическим примером использования множеств:
 
 	sadd friends:leto ghanima paul chani jessica
 	sadd friends:duncan paul jessica alia
 
-Regardless of how many friends a user has, we can efficiently tell (O(1)) whether userX is a friend of userY or not
+Независимо от того, сколько друзей имеет пользователь, мы можем эффективно (O(1)) определить, являются ли пользователи userX и userY друзьями, или нет.
 
 	sismember friends:leto jessica
 	sismember friends:leto vladimir
 
-Furthermore we can see what two or more people share the same friends:
+Более того, мы можем узнать, имеют ли два пользователя общих друзей:
 
 	sinter friends:leto friends:duncan
 
-and even store the result at a new key:
+и даже сохранить результат этой операции под новым ключом:
 
 	sinterstore friends:leto_duncan friends:leto friends:duncan
 
-Sets are great for tagging or tracking any other properties of a value for which duplicates don't make any sense (or where we want to apply set operations such as intersections and unions).
+Множества отлично подходят для теггинга (*tagging, присвоение семанитических ярлыков/меток - прим. перев.*) и отслеживания любых других свойств, для которых повторы не имеют смысла (или там, где мы хотим использовать операции над множествами, такие как пересечение и объединение).
 
 ### Упорядоченные Множества (Sorted Sets)
 
-The last and most powerful data structure are sorted sets. If hashes are like strings but with fields, then sorted sets are like sets but with a score. The score provides sorting and ranking capabilities. If we wanted a ranked list of friends, we might do:
+Последней и самой мощной структурой данных являются упорядоченные множества. Если хеши похожи на строки, но имеют поля, то упорядоченные множества похожи на множества, но имеют счетчики. Счетчики предоставляют возможности упорядочивания и ранжирования. Если мы хотим получить ранжированный список друзей, мы можем сделать следующее:
 
 	zadd friends:leto 100 ghanima 95 paul 95 chani 75 jessica 1 vladimir
 
-Want to find out how many friends `leto` has with a rank of 90 or over?
+Хотим узнать, сколько друзей с рейтингом 90 и выше имеет пользователь `leto`?
 
 	zcount friends:leto 90 100
 
-How about figuring out `chani`'s rank?
+Как насчет рейтинга `chani`?
 
 	zrevrank friends:leto chani
 
-We use `zrevrank` instead of `zrank` since Redis' default sort is from low to high (but in this case we are ranking from high to low). The most obvious use-case for sorted sets is a leaderboard system. In reality though, anything you want sorted by an some integer, and be able to efficiently manipulate based on that score, might be a good fit for a sorted set.
+Мы используем `zrevrank` вместо `zrank`, поскольку по умолчанию в Redis сортировка происходит от меньшего к большему (мы ранжируем от большего к меньшему). Самам очевидным примером использования упорядоченных множеств являются системы рейтингов. На самом деле упорядоченные множества подойдут для любых случаев, когда вы имеете значения, которые вы хотите упорядочить, используя для этого целочисленные "весовые коэффициенты", и которыми вы хотите управлять на основании этих коэффициентов.
 
-In the next chapter we'll look at how sorted sets can be used for tracking events which are time-based (where time is the score); which is another common use-case.
+В следующей главе мы увидим как упорядоченные множества могут использоваться для отслеживания событий, основанных на времени (когда время используется в качестве весового коэффициента), что является другим типичным примером использования упорядоченных множеств.
 
 ### В Этой Главе
 
-That's a high level overview of Redis' five data structures. One of the neat things about Redis is that you can often do more than you first realize. There are probably ways to use string and sorted sets that no one has thought of yet. As long as you understand the normal use-case though, you'll find Redis ideal for all types of problems. Also, just because Redis exposes five data structures and various methods, don't think you need to use all of them. It isn't uncommon to build a feature while only using a handful of commands.
+Вы обзорно познакомились с пятью структурами данных Redis. Одна из замечательных особенностей Redis состоит в том, что вы можете сделать больше, чем вам показалось на первый взгляд. Вероятно, есть способы использования строк и упорядоченных множеств, о которых еще никто не догадался. Тем не менее, понимая стандартные способы их использования, вы сможете использовать Redis для решения любых типов задач. Кроме того, нет нужды использовать все структуры даных и операции над ними только потому, что redis дает такую возможность. Не так уж редко многие задачи решаются весьма ограниченным набором команд.
 
 \clearpage
 
