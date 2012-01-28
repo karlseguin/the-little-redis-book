@@ -681,7 +681,7 @@ Or you can disable a command by setting the new name to an empty string.
 
 ### Size Limitations
 
-### Ограничения
+### Ограничения Размеров
 
 As you start using Redis, you might wonder "how many keys can I have?". You might also wonder how many fields can a hash have (especially when you use it to organize your data), or how many elements can lists and sets have? Per instance, the practical limits for all of these is in the hundreds of millions.
 
@@ -705,7 +705,7 @@ Unfortunately, Redis replication doesn't yet provide automated failover. If the 
 
 ### Backups
 
-### Резервное копирование данных
+### Резервное Копирование Данных
 
 Backing up Redis is simply a matter of copying Redis' snapshot to whatever location you want (S3, FTP, ...). By default Redis saves its snapshop to a file named `dump.rdb`. At any point in time, you can simply `scp`, `ftp` or `cp` (or anything else) this file.
 
@@ -737,7 +737,7 @@ High availability and scaling is something that can be achieved today, as long a
 
 ### In This Chapter
 
-### В этой главе
+### В Этой Главе
 
 Given the number of projects and sites using Redis already, there can be no doubt that Redis is production-ready, and has been for a while. However, some of the tooling, especially around security and availability is still young. Redis Cluster, which we'll hopefully see soon, should help address some of the current management challenges.
 
