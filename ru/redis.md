@@ -488,9 +488,9 @@ Redis также поддерживает конвейерную обработ�
 
 \clearpage
 
-## Chapter 4 - Beyond The Data Structures
+## Глава 4 - За Пределами Структур Данных Beyond The Data Structures
 
-While the five data structures form the foundation of Redis, there are other commands which aren't data structure specific. We've already seen a handful of these: `info`, `select`, `flushdb`, `multi`, `exec`, `discard`, `watch` and `keys`. This chapter will look at some of the other important ones.
+Несмотря на то, что пять структур данных формируют основу Redis, в системе также есть команды, не относящиеся к структурам данных. Мы уже видели некоторые из них: `info`, `select`, `flushdb`, `multi`, `exec`, `discard`, `watch` и `keys`. В этой главе мы рассмотрим несколько других подобных команд.
 
 ### Expiration
 
