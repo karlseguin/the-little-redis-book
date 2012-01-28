@@ -335,33 +335,32 @@ The important takeaway from this chapters are:
 
 Важно заметить, что асимптотическая запись "большого O" указывает на худший случай. Когда мы говорим, что выполнение оперции займет время, определяемое как O(N), мы на самом деле можем получить результат сразу же, но может случиться и так, что искомый элемент окажется самым последним.
 
+### Псевдо-Многоключевые Запросы
 
-### Pseudo Multi Key Queries
-
-A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
+Типичной ситуацией, в которую вы будете попадать, будет необходимость запрашивать одно и то же значение по разным ключам. Например, вы можете хотеть получить данные пользователя по адресу электронной почты (в случае, если пользователь входит на сайт впервые) и по идентификатору (после входа пользователя на сайт). Один из ужасных решений будет дублирование объекта в двух строковых значениях:
 
 	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}"
 	set users:9001 "{id: 9001, email: 'leto@dune.gov', ...}"
 
-This is bad because it's a nightmare to manage and it takes twice the amount of memory.
+Это неправильно, поскольку такими данными трудно управлять, и они занимают в два раза больше памяти.
 
-It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
+Было бы здорово, если бы Redis позволял связывать один ключ с другим, но такой возможности нет (и скорее всего никогда не будет). Главным принципом развития Redis является простота кода и программного интерфейса (API). Внутренняя реализация связанных ключей (есть много того, что можно делать с ключами, о чем мы еще не говорили) не стоит возможных усилий, если мы увидим, что Redis уже предоставляет решение - хеши.
 
-Using a hash, we can can remove the need for duplication:
+Используя хеш, мы можем избавиться от необходимости дублирования:
 
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
 
-What we are doing is using the field as a pseudo secondary index and referencing the single user object. To get a user by id, we issue a normal `get`:
+Мы используем поле как вторичный псевдо-индекс, и получаем ссылку на единтсвенный объект, представляющий пользователя. Чтобы получить пользователя по идентификатору, мы используем обычную команду `get`:
 
 	get users:9001
 
-To get a user by email, we issue an `hget` followed by a `get` (in Ruby):
+Чтобы получить пользователя по адресу электронной почты, мы воспользуемся сначала `hget`, а затем `get` (код на Ruby):
 
 	id = redis.hget('users:lookup:email', 'leto@dune.gov')
 	user = redis.get("users:#{id}")
 
-This is something that you'll likely end up doing often. To me, this is where hashes really shine, but it isn't an obvious use-case until you see it.
+Это то, чем вы, скорее всего, будете пользоваться очень часто. Для меня это как раз тот случай, когда хеши особенно хороши, но это не очевидный способ использования, пока вы не увидите это своими глазами.
 
 ### References and Indexes
 
