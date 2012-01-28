@@ -311,95 +311,94 @@ The important takeaway from this chapters are:
 
 \clearpage
 
-## Chapter 3 - Leveraging Data Structures
+## Глава 3 - Использование Структур Данных
 
-In the previous chapter we talked about the five data structures and gave some examples of what problems they might solve. Now it's time to look at a few more advanced, yet common, topics and design patterns.
+В предыдущей главе мы говорили о пяти структурах данных и увидели несколько примеров того, какие задачи они могут решать. Теперь пришло время посмотреть на более специфичные, но все же довольно распространенные, особенности и шаблоны проектирования.
 
-### Big O Notation
+### Асимпототическая Сложность (Запись "Большое O")
 
-Throughout this book we've made references to the Big O notation in the form of O(n) or O(1). Big O notation is used to explain how something behaves given a certain number of elements. In Redis, it's used to tell us how fast a command is based on the number of items we are dealing with.
+В этой книге мы уже упоминали запись асимпотической сложности (или времени выполнения) ("большого О") в форме O(N) и O(1). Эта форма записи используется для объяснения того, как некий алгоритм ведет себя при определенном количестве элементов, над которыми совершается операция. В Redis это показывает нам, насколько быстро исполняется команда в зависимости от числа элементов в структуре данных, с которой мы работаем. (*Здесь автор неточен. Это верно не только для Redis, а вообще для любых алгоритмов, причем не только в зависимости от числа элементов, но и от их значения - например, сложность алгоритма вычисления факториала, где в качестве аргумента выступает всего одно число - прим. перев.*)
 
-Redis documentation tells us the Big O notation for each of its commands. It also tells us what the factors are that influence the performance. Let's look at some examples.
+Документация Redis содержит сведения об асимпотической сложности для каждой команды. Это также указывает на то, какие факторы влияют на производительность. Давайте рассмотрим несколько примеров.
 
-The fastest anything can be is O(1) which is a constant. Whether we are dealing with 5 items or 5 million, you'll get the same performance. The `sismember` command, which tells us if a value belongs to a set, is O(1). `sismember` is a powerful command, and its performance characteristics are a big reason for that. A number of Redis commands are O(1).
+Самые быстрые алгоритмы имеют сложность O(1) - константу. Независимо от того, выполняется ли операция над 5 элементами или 5 млн. элементов, вы получаете одинаковую производительность. Команда `sismember`, показывающая, принадлежит ли элемент множеству, имеет сложность O(1). `sismember` - мощная команда, и ее производительность, помимо прочего, является тому причиной. Несколько команд Redis имеют такую сложность.
 
-Logarithmic, or O(log(N)), is the next fastest possibility because it needs to scan through smaller and smaller partitions. Using this type of divide and conquer approach, a very large number of items quickly gets broken down in a few iterations. `zadd` is a O(log(N)) command, where N is the number of elements already in the set.
+Логарифмическая сложность - O(log(N)) - следующая по скорости, поскольку нуждается в сканировании все меньшего и меньшего числа элементов. Используя такой подход "разделяй и властвуй", даже огромное количество элементов быстро разбивается на части за несколько итераций. Команда `zadd` имеет сложность O(log(N)), где N - количество элементов, которые уже включены во множество.
 
-Next we have linear commands, or O(N). Looking for a non-indexed row in a table is an O(N) operation. So is using the `ltrim` command. However, in the case of `ltrim`, N isn't the number of elements in the list, but rather the elements being removed. Using `ltrim` to remove 1 item from a list of millions will be faster than using `ltrim` to remove 10 items from a list of thousands. (Though they'll probably both be so fast that you wouldn't be able to time it.)
+Далее следуют линейные по сложности команды - O(N). Поиск в неиндексированной строке таблицы является операцией с такой сложностью. Так же, как использование команды `ltrim`. Тем не менее, в случае с `ltrim` N - это не общее количество элементов в списке, а количество удаляемых элементов. Использование `ltrim` для удаления 1 элемента из списка с миллионом элементов будет быстрее, чем удаление 10 элементов из списка, содержащего сотни элементов. (Хотя обе операции, вероятно, будут настолько быстрыми, что вы не сможете измерить их время.)
 
-`zremrangebyscore` which removes elements from a sorted set with a score between a minimum and a maximum value has a complexity of O(log(N)+M). This makes it a mix. By reading the documentation we see that N is the number of total elements in the set and M is the number of elements to be removed. In other words, the number of elements that'll get removed is probably going to be more significant, in terms of performance, than the total number of elements in the list.
+Команда `zremrangebyscore`, удаляющая элементы упорядоченного множества с весовыми коэффициентами в дипазоне между минимальным и максимальным указанным значением, имеет сложность O(log(N)+M). То есть имеет смешанную сложность. Читая документацию, мы видим, что N - это общее число элементов множества, а M - количество удаляемых элементов. Другими словами, количество удаляемых элементов, вероятно, сильнее повлияет на производительность, чем общее количество элементов.
 
-The `sort` command, which we'll discuss in greater detail in the next chapter has a complexity of O(N+M*log(M)). From its performance characteristic, you can probably tell that this is one of Redis' most complex commands.
+Команда `sort`, которую мы более детально рассмотрим в следующей главе, имеет сложность O(N+M*log(M)). Из этой записи вы можете заключить, что это, вероятно, наиболее вычислительно сложная команда Redis.
 
-There are a number of other complexities, the two remaining common ones are O(N^2) and O(C^N). The larger N is, the worse these perform relative to a smaller N. None of Redis' commands have this type of complexity.
+Есть и другие степени сложности, из которых две наиболее распространенные - O(N^2) и O(C^N). Чем больше N, тем хуже производительность по сравнению с меньшими N. (*Это верно и для других форм, описанных выше - прим. перев.*) Никакие из команд Redis не имеют такой сложности.
 
-It's worth pointing out that the Big O notation deals with the worst case. When we say that something takes O(N), we might actually find it right away or it might be the last possible element.
+Важно заметить, что асимптотическая запись "большого O" указывает на худший случай. Когда мы говорим, что выполнение оперции займет время, определяемое как O(N), мы на самом деле можем получить результат сразу же, но может случиться и так, что искомый элемент окажется самым последним.
 
+### Псевдо-Многоключевые Запросы
 
-### Pseudo Multi Key Queries
-
-A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
+Типичной ситуацией, в которую вы будете попадать, будет необходимость запрашивать одно и то же значение по разным ключам. Например, вы можете хотеть получить данные пользователя по адресу электронной почты (в случае, если пользователь входит на сайт впервые) и по идентификатору (после входа пользователя на сайт). Одним из ужасных решений будет дублирование объекта в двух строковых значениях:
 
 	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}"
 	set users:9001 "{id: 9001, email: 'leto@dune.gov', ...}"
 
-This is bad because it's a nightmare to manage and it takes twice the amount of memory.
+Это неправильно, поскольку такими данными трудно управлять, и они занимают в два раза больше памяти.
 
-It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
+Было бы здорово, если бы Redis позволял связывать один ключ с другим, но такой возможности нет (и скорее всего никогда не будет). Главным принципом развития Redis является простота кода и программного интерфейса (API). Внутренняя реализация связанных ключей (есть много того, что можно делать с ключами, о чем мы еще не говорили) не стоит возможных усилий, если мы увидим, что Redis уже предоставляет решение - хеши.
 
-Using a hash, we can can remove the need for duplication:
+Используя хеш, мы можем избавиться от необходимости дублирования:
 
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
 
-What we are doing is using the field as a pseudo secondary index and referencing the single user object. To get a user by id, we issue a normal `get`:
+Мы используем поле как вторичный псевдо-индекс, и получаем ссылку на единственный объект, представляющий пользователя. Чтобы получить пользователя по идентификатору, мы используем обычную команду `get`:
 
 	get users:9001
 
-To get a user by email, we issue an `hget` followed by a `get` (in Ruby):
+Чтобы получить пользователя по адресу электронной почты, мы воспользуемся сначала `hget`, а затем `get` (код на Ruby):
 
 	id = redis.hget('users:lookup:email', 'leto@dune.gov')
 	user = redis.get("users:#{id}")
 
-This is something that you'll likely end up doing often. To me, this is where hashes really shine, but it isn't an obvious use-case until you see it.
+Это то, чем вы, скорее всего, будете пользоваться очень часто. Для меня это как раз тот случай, когда хеши особенно хороши, но это не очевидный способ использования, пока вы не увидите это своими глазами.
 
-### References and Indexes
+### Ссылки и Индексы
 
-We've seen a couple examples of having one value reference another. We saw it when we looked at our list example, and we saw it in the section above when using hashes to make querying a little easier. What this comes down to is essentially having to manually manage your indexes and references between values. Being honest, I think we can say that's a bit of a downer, especially when you consider having to manage/update/delete these references manually. There is no magic solution to solving this problem in Redis.
+Мы рассмотрели пару примеров, где одно значение ссылается на другое. Мы видели это, когда смотрели на пример со списком, и мы видели это в разделе выше, когда использовали хеши для того, чтобы сделать запросы немного проще. Это в итоге приводит к необходимости ручного управления индексами и ссылками между значениями. Честно говоря, можно назвать это недостатком, особенно когда вы столкнетесь с необходимостью управлять этими ссылками, обновлять и удалять их вручную. В Redis нет магического решения этой проблемы.
 
-We already saw how sets are often used to implement this type of manual index:
+Мы уже видели, как множества часто используются для реализации ручного индекса:
 
 	sadd friends:leto ghanima paul chani jessica
 
-Each member of this set is a reference to a Redis string value containing details on the actual user. What if `chani` changes her name, or deletes her account? Maybe it would make sense to also track the inverse relationships:
+Каждый элемент этого множества является ссылкой на строковое значение, содержащее информацию о пользователе. А что, если `chani` изменит свое имя или удалит учетную запись? Может быть, имеет смысл хранить обратные взаимосвязи:
 
 	sadd friends_of:chani leto paul
 
-Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter).
+Не беря в расчет сложность поддержки такой структуры, если вы похожи на меня, вы, вероятно, испугаетесь дополнительных расходов памяти и времени обработки таких дополниельных индексных значений. В следующем разделе мы поговорим о путях снижения затрат производительности, возникающих из-за необходимости дополнительных обращений к базе даннх (мы кратко упоминали об этом в первой главе).
 
-If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient).
+Если вы задумаетесь об этом, то поймете, что реляционные базы данных также имеют эти накладные расходы. Индексы занимают память, должны сканироваться и затем соответсвующие записи должны извлекаться. От накладных расходов ловко абстрагируются (и делается множество оптимизаций для того, чтобы сделать обработку максимально эффективной).
 
-Again, having to manually deal with references in Redis in unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
+Необходимость ручного управления ссылками в Redis огорчает. Но, все первоначальные опасения о влиянии на производительность и потребление памяти должны быть проверены на практике. Я думаю, вы обнаружите, что это не такая уж большая проблема.
 
-### Round Trips and Pipelining
+### Дополнительные Запросы и Конвейерная Обработка
 
-We already mentioned that making frequent trips to the server is a common pattern in Redis. Since it is something you'll do often, it's worth taking a closer look at what features we can leverage to get the most out of it.
+Мы уже упоминали, что частые обращения к серверу являются типичными при использовании Redis. Поскольку это делается часто, будет полезно узнать больше о возможностях, которые мы можем использовать для получения наилучших результатов.
 
-First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values:
+Прежде всего, команды или принимают один или более параметров, или имеют родственные команды, которые принимают несколько параметров. Ранее мы видели команду `mget`, принимающую несколько ключей и возвращающую их значения:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
 
-Or the `sadd` command which adds 1 or more members to a set:
+Или команда `sadd`, добавляющая одно или более значений к множеству:
 
 	sadd friends:vladimir piter
 	sadd friends:paul jessica leto "leto II" chani
 
-Redis also supports pipelining. Normally when a client sends a request to Redis it waits for the reply before sending the next request. With pipelining you can send a number of requests without waiting for their responses. This reduces the networking overhead and can result in significant performance gains.
+Redis также поддерживает конвейерную обработку. Обычно, когда клиентское приложние посылает запрос к Redis, оно ждет ответа, прежде чем послать следующий запрос. С конвейерной обработкой вы можете посылать несколько запросов без ожидания момента, когда они вернут результат. Это снижает накладные расходы обмена данными по сети и может значительно увеличить производительность.
 
-It's worth noting that Redis will use memory to queue up the commands, so it's a good idea to batch them. How large a batch you use will depend on what commands you are using, and more specifically, how large the parameters are. But, if you are issuing commands against ~50 character keys, you can probably batch them in thousands or tens of thousands.
+Для Redis ничего не стоит использовать память для создания очереди запросов, поэтому хорошей идеей будет группировать запросы. Насколько большим будет используемый вами пакет запросов зависит от того, какие команды вы используете, и, что более важно, каков размер их параметров. Но, если вы используете команды с длиной параметров примерно в 50 символов, вы, вероятно, можете группировать их тысячами или десятками тысяч.
 
-Exactly how you execute commands within a pipeline will vary from driver to driver. In Ruby you pass a block to the `pipelined` method:
+То, как именно вы исполняете команды в конвейере, будет зависеть от используемого драйвера. В Ruby вы передаете блок в метод `pipelined`:
 
 	redis.pipelined do
 	  9001.times do
@@ -407,43 +406,43 @@ Exactly how you execute commands within a pipeline will vary from driver to driv
 	  end
 	end
 
-As you can probably guess, pipelining can really speed up a batch import!
+Как вы можете догадаться, конвейреная обработка может значительно ускорить импортирование пакета запросов!
 
-### Transactions
+### Транзакции
 
-Every Redis command is atomic, including the ones that do multiple things. Additionally, Redis has support for transactions when using multiple commands.
+Каждая команда Redis атомарна, включая команды, которые делают несколько вещей. Дополнительно, Redis поддерживает транзакции при использовании нескольких команд.
 
-You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic. While one command is executing, no other command will run. (We'll briefly talk about scaling in a later chapter.) This is particularly useful when you consider that some commands do multiple things. For example:
+Возможно, вы знаете, что Redis на самом деле работает в один поток, благодаря чему и гарантируется атомарность (неделимость) каждой команды. Пока исполняется одна команда, остальные не могут быть исполнены. (Мы кратко обсудим масштабирование позже.) Это бывает полезно, когда речь идет о командах, делающих несколько вещей. Например:
 
-`incr` is essentially a `get` followed by a `set`
+`incr` - это, по сути, `get` за которой следует `set`
 
-`getset` sets a new value and returns the original
+`getset` устанавливает новое значение и возвращает старое
 
-`setnx` first checks if the key exists, and only sets the value if it does not
+`setnx` сначала проверяет, существует ли ключ, и устанавливает значение только в том случае, если ключ не существовал
 
-Although these commands are useful, you'll inevitably need to run multiple commands as an atomic group. You do so by first issuing the `multi` command, followed by all the commands you want to execute as part of the transaction, and finally executing `exec` to actually execute the commands or `discard` to throw away, and not execute the commands. What guarantee does Redis make about transactions?
+Несмотря на то, что эти команды полезны, вам неизбежно понадобится исполнять несколько команд как атомарную группу. Вы можете это сделать, вызвав сначала команду `multi`, за которой следуют команды, которые вы хотите выполнить как часть транзакции, и в конце вызвав команду `exec` для того, чтобы выполнить команды, или `discard`, чтобы отменить их выполнение. Какие гарантии дает Redis касательно транзакций?
 
-* The commands will be executed in order
+* Команды исполнятся по порядку
 
-* The commands will be executed as a single atomic operation (without another client's command being executed halfway through)
+* Команды исполнятся как единая, неделимая операция (никакая другая команда не будет исполнена в ходе выполнения транзакции)
 
-* That either all or none of the commands in the transaction will be executed
+* Будут выполнены либо все команды транзакции, либо ни одна из них
 
-You can, and should, test this in the command line interface. Also note that there's no reason why you can't combine pipelining and transactions.
+Вы можете, и должны, попробовать это в командной строке. Также обратите внимание, что нет причин отказываться от использования конвейрной обработки и транзакций вместе.
 
 	multi
 	hincrby groups:1percent balance -9000000000
 	hincrby groups:99percent balance 9000000000
 	exec
 
-Finally, Redis lets you specify a key (or keys) to watch and conditionally apply a transaction if the key(s) changed. This is used when you need to get values and execute code based on those values, all in a transaction. With the code above, we wouldn't be able to implement our own `incr` command since they are all executed together once `exec` is called. From code, we can't do:
+Наконец, Redis позволяет указывать ключ (или ключи) для отслеживания изменений, и применять транзакцию, если ключ(и) изменился(-лись). Это используется, когда вам нужно получить значения и исполнить код в зависимости от них в одной транзакции. В коде выше мы не смогли бы реализовать собственную команду `incr`, поскольку все команды исполняются вместе, когда вызывается `exec`. Мы не можем сделать так:
 
 	redis.multi()
 	current = redis.get('powerlevel)
 	redis.set('powerlevel', current + 1)
 	redis.exec()
 
-That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`, we can do:
+Транзакции в Redis работают иначе. Но, если мы добавим `watch` к `powerlevel`, мы сможем сделать следующее:
 
 	redis.watch('powerlevel')
 	current = redis.get('powerlevel')
@@ -451,43 +450,41 @@ That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`
 	redis.set('powerlevel', current + 1)
 	redis.exec()
 
-If another client changes the value of `powerlevel` after we've called `watch` on it, our transaction will fail. If no client changes the value, the set will work. We can execute this code in a loop until it works.
+Если другой клиент изменит значение ключа `powerlevel` после того, как мы вызвали `watch` для этого ключа, наша транзакция не будет исполнена. Если же значение не изменится, все сработает. мы можем исполнять этот код в цикле, пока он не сработает.
 
-### Time Values
+### Значения Времени
 
-A slightly less common pattern that I'm fond of is using sorted sets to track time value. In Redis' documentation the sorting value is called a *score*, which might limit some people's imagination of different ways they can put it to use.
+Менее частым примером использования, который я люблю, является использование упорядоченных множеств для отслеживания изменяющихся во времени значений. В документации Redis значения, используемые для сортировки, называются *score* (очки,  баллы), что может ограничить воображение некоторых людей относительно того, как можно использовать эти значения.
 
-Let's say we want to track the stock prices for a symbol. Our key would be the symbol, our *score* would be the timestamp and our value the price:
+Допустим, мы хотим отслеживать цену акций определенного тикера. (*Тикер - краткое название биржевой информации котируемых инструментов - например, акций компаний - прим. перев.*) Тикер будет ключом, весовым коэффициентом (*score*) будет время, а значением будет цена:
 
 	redis.zadd('GOOG', Time.now.utc.to_i-100, 625.03)
 	redis.zadd('GOOG', Time.now.utc.to_i-95, 623.01)
 	redis.zadd('GOOG', Time.now.utc.to_i-95, 625.02)
 	redis.zadd('GOOG', Time.now.utc.to_i-92, 624.98)
 
-By using `zrangebyscore` we can get a range of values by a score. In our case that means getting values for a specific date range. If we wanted to get the last 5 seconds worth of prices, we could do:
+Используя `zrangebyscore`, мы можем получить значения из определенного интервала значений весовых коэффициентов. В нашем случае это означает получение значений из определенного интервала времени. Если мы хотим получить значения для последних пяти секунд, мы можем сделать так:
 
 	redis.zrangebyscore('GOOG', (Time.now.utc - 5).to_i, Time.now.utc.to_i)
 
+### Анти-Шаблон Использования Ключей
 
-### Keys Anti-Pattern
+В следующей главе мы поговорим о командах, не относящихся непосредственно к структурам данных. Некоторые из них служат для администрирования и отладки. Но есть одна, о которой я бы хотел упомянуть отдельно - `keys`. Эта команда принимает шаблон и находит все ключи, соответствующие ему. Эта команда кажется подходящей для определенного рода задач, но ее не следует использовать в готовом приложении. Почему? Потому что она осуществляет линейный поиск совпадений с шаблоном по всем ключам. Проще говоря, она медленная.
 
-In the next chapter we'll talk about commands that aren't specifically related to data structures. Some of these are administrative or debugging tools. But there's one I'd like to talk about in particular: the `keys` command. This command takes a pattern and finds all the matching keys. This command seems like it's well suited for a number of tasks, but it should never be used in production code. Why? Because it does a linear scan through all the keys looking for matches. Or, put simply, it's slow.
-
-How do people try and use it? Say you are building a hosted bug tracking service. Each account will have an `id` and you might decide to store each bug into a string value with a key that looks like `bug:account_id:bug_id`. If you ever need to find all of an account's bugs (to display them, or maybe delete them if they delete their account), you might be tempted (as I was!) to use the `keys` command:
+Как же ее используют? Допустим, вы создаете веб-приложения для баг-трекинга (отслеживания ошибок). Каждая учетная запись будет иметь идентификатор `id_аккаунта` и вы можете решить хранить каждую ошибку в строковом значении с ключом в формате `bug:id_аккаунта:id_ошибки`. Если вам когда-нибудь понадобится найти все ошибки для определенной учетной записи (для отображения или удаления в случае удаления учетной записи), вы, возможно, будете (как я когда-то) использовать команду `keys`:
 
 	keys bug:1233:*
 
-The better solution is to use a hash. Much like we can use hashes to provide a way to expose secondary indexes, so too can we use them to organize our data:
+Лучшим решением будет использование хеша. Так же, как мы можем использовать хеши в качестве вторичного индекса, мы можем использовать их для организации данных:
 
 	hset bugs:1233 1 "{id:1, account: 1233, subject: '...'}"
 	hset bugs:1233 2 "{id:2, account: 1233, subject: '...'}"
 
-To get all the bug ids for an account we simply call `hkeys bugs:1233`. To delete a specific bug we can do `hdel bugs:1233 2` and to delete an account we can delete the key via `del bugs:1233`.
+Для получения идентификаторов всех ошибок для заданной учетной записи мы просто вызовем `hkeys bugs:1233`. Для удаления определенной ошибки мы можем использовать `hdel bugs:1233 2`, а для удаления учетной записи со всеми данными - `del bugs:1233`.
 
+### В Этой Главе
 
-### In This Chapter
-
-This chapter, combined with the previous one, has hopefully given you some insight on how to use Redis to power real features. There are a number of other patterns you can use to build all types of things, but the real key is to understand the fundamental data structures and to get a sense for how they can be used to achieve things beyond your initial perspective.
+Надеюсь, что эта глава вместе с предыдущей дали вам основы для понимания того, как использовать Redis для реализации полезных возможностей. Есть и другие шаблоны, которые вы можете использовать для построения приложений другого типа, но суть здесь состоит в понимании фундаментальных структур данных и того, как они могут быть использованы для реализации решений, лежащих за пределами того, что вы изначально могли себе вообразить.
 
 \clearpage
 
