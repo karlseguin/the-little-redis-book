@@ -311,29 +311,29 @@ The important takeaway from this chapters are:
 
 \clearpage
 
-## Chapter 3 - Leveraging Data Structures
+## Глава 3 - Использование Структур Данных
 
-In the previous chapter we talked about the five data structures and gave some examples of what problems they might solve. Now it's time to look at a few more advanced, yet common, topics and design patterns.
+В предыдущей главе мы говорили о пяти структурах данных и увидели несколько примеров того, какие задачи они могут решать. Теперь пришло время посмотреть на более специфичные, но все же довольно распространенные, особенности и шаблоны проектирования.
 
-### Big O Notation
+### Асимпототическая Сложность (Запись "Большое O")
 
-Throughout this book we've made references to the Big O notation in the form of O(n) or O(1). Big O notation is used to explain how something behaves given a certain number of elements. In Redis, it's used to tell us how fast a command is based on the number of items we are dealing with.
+В этой книге мы уже упоминали запись асимпотической сложности (или времени выполнения) ("большого О") в форме O(n) и O(1). Эта форма записи используется для объяснения того, как некий алгоритм ведет себя при определенном количестве элементов, над которыми совершается операция. В Redis это показывает нам, насколько быстро исполняется команда в зависимости от числа элементов в структуре данных, с которой мы работаем. (*Здесь автор неточен. Это верно не только для Redis, а вообще для любых алгоритмов, причем не только в зависимости от числа элементов, но и от их значения - например, сложность алгоритма вычисления факториала, где в качестве аргумента выступает всего одно число - прим. перев.*)
 
-Redis documentation tells us the Big O notation for each of its commands. It also tells us what the factors are that influence the performance. Let's look at some examples.
+Документация Redis содержит сведения об асимпотической сложности для каждой команды. Это также указывает на то, какие факторы влияют на производительность. Давайте рассмотрим несколько примеров.
 
-The fastest anything can be is O(1) which is a constant. Whether we are dealing with 5 items or 5 million, you'll get the same performance. The `sismember` command, which tells us if a value belongs to a set, is O(1). `sismember` is a powerful command, and its performance characteristics are a big reason for that. A number of Redis commands are O(1).
+Самые быстрые алгоритмы имеют сложность O(1) - константу. Независимо от того, выполняется ли операция над 5 элементами или 5 млн. элементов, вы получаете одинаковую производительность. Команда `sismember`, показывающая, принадлежит ли элемент множеству, имеет сложность O(1). `sismember` - мощная команда, и ее производительность, помимо прочего, является тому причиной. Несколько команды Redis имеют такую сложность.
 
-Logarithmic, or O(log(N)), is the next fastest possibility because it needs to scan through smaller and smaller partitions. Using this type of divide and conquer approach, a very large number of items quickly gets broken down in a few iterations. `zadd` is a O(log(N)) command, where N is the number of elements already in the set.
+Логарифмическая сложность - O(log(N)) - следующая по скорости, поскольку нуждается в сканировании все меньшего и меньшего числа элементов. используя такой подход "разделяй и властвуй", даже огромное количество элементов быстро разбивается на части за несколько итериаций. Команда `zadd` имеет сложность O(log(N)), где N - количество элементов, которые уже включены во множество.
 
-Next we have linear commands, or O(N). Looking for a non-indexed row in a table is an O(N) operation. So is using the `ltrim` command. However, in the case of `ltrim`, N isn't the number of elements in the list, but rather the elements being removed. Using `ltrim` to remove 1 item from a list of millions will be faster than using `ltrim` to remove 10 items from a list of thousands. (Though they'll probably both be so fast that you wouldn't be able to time it.)
+Далее следуют линейные по сложности команды - O(N). Поиск в неиндексированной строке таблицы является операцией с такой сложностью. Также, как использование команды `ltrim`. Тем не менее, в случае с `ltrim` N - это не общее количество элементов в списке, а количество удаляемых элементов. Использование `ltrim` для удаления 1 элемента из списка с миллионом элементов будет быстрее, чем удаление 10 элементов из списка, содержащего сотни элементов. (Хотя обе операции, вероятно, будут настолько быстрыми, что вы не сможете измерить их время.)
 
-`zremrangebyscore` which removes elements from a sorted set with a score between a minimum and a maximum value has a complexity of O(log(N)+M). This makes it a mix. By reading the documentation we see that N is the number of total elements in the set and M is the number of elements to be removed. In other words, the number of elements that'll get removed is probably going to be more significant, in terms of performance, than the total number of elements in the list.
+Команда `zremrangebyscore`, удаляющая элементы упорядоченного множества с весовыми коэффициентами в дипазоне между минимальным и максимальным указанным значением, имеет сложность O(log(N)+M). То есть имеет смешанную сложность. Читая документацию, мы видим, что N - это общее число элементов множетсва, а M - количество удаляемых элементов. Другими словами, количество удаляемых элементов, вероятно, сильнее повлияет на производительность, чем общее количество элементов.
 
-The `sort` command, which we'll discuss in greater detail in the next chapter has a complexity of O(N+M*log(M)). From its performance characteristic, you can probably tell that this is one of Redis' most complex commands.
+Команда `sort`, которую мы более детально рассмотрим в следующей главе, имеет сложность O(N+M*log(M)). Из этой записи вы можете заключить, что это, вероятно, наиболее вычислительно сложная команда Redis.
 
-There are a number of other complexities, the two remaining common ones are O(N^2) and O(C^N). The larger N is, the worse these perform relative to a smaller N. None of Redis' commands have this type of complexity.
+Есть и другие степени сложности, из которых две наиболее распространенные - O(N^2) и O(C^N). Чем больше N, тем хуже производительность по сравнению с меньшими N. (*Это верно и для других форм, описанных выше - прим. перев.*) Никакие из команд Redis не имеют такой сложности.
 
-It's worth pointing out that the Big O notation deals with the worst case. When we say that something takes O(N), we might actually find it right away or it might be the last possible element.
+Важно заметить, что асимптотическая запись "большого O" указывает на худший случай. Когда мы говорим, что выполнение оперции займет время, определяемое как O(N), мы на самом деле можем получить результат сразу же, но может случиться и так, что искомый элемент окажется самым последним.
 
 
 ### Pseudo Multi Key Queries
