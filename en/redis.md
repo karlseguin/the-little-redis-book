@@ -148,7 +148,7 @@ I do feel that some developers have lost touch with how little space data can ta
 
 Redis did add support for virtual memory. However, this feature has been seen as a failure (by Redis' own developers) and its use has been deprecated. 
 
-(On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.
+(On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.)
 
 ### Putting It Together
 
@@ -166,7 +166,7 @@ It's important to understand this aspect of Redis because it impacts how you int
 
 Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves. 
 
-The important takeaway from this chapters are:
+The important takeaway from this chapter are:
 
 * Keys are strings which identify pieces of data (values)
 
