@@ -137,19 +137,19 @@ Redis использует знакомую всем концепцию базы
 
 Мы рассмотрим более конкретные примеры в дальнейшем. Сейчас очень важно, чтобы мы разобрались в этих базовых принципах Redis. Этот подход позволяет использовать в качестве значений что угодно - Redis никогда не обращается к ним. Мы научимся строить модели наших данных по другому, как того требует этот новый мир.
 
-### Memory and Persistence
+### Память и Персистентность
 
-We mentioned before that Redis is an in-memory persistent store. With respect to persistence, by default, Redis snapshots the database to disk based on how many keys have changed. You configure it so that if X number of keys change, then save the database every Y seconds. By default, Redis will save the database every 60 seconds if 1000 or more keys have changed all the way to 15 minutes if only a 9 keys has changed.
+Мы упоминали ранее, что Redis является персистентным (*персистентность - свойство данных сохраняться после того, как перестал существовать процесс, создавший эти данные - прим. перев.*) хранилищем в оперативной памяти. По умолчанию, для поддержания персистентности, Redis сохраняет снимки базы данных на диск в зависимости от того, сколько ключей было изменено. Вы можете настроить этот процесс таким образом, что если X - количество изменившихся ключей, то базу данных нужно сохранять каждые Y секунд. По умолчанию, Redis сохраняет базу с интервалами от 60 секунд, если 1000 или более ключей изменились, до 15 минут, если изменились хотя бы 9 ключей.
 
-Alternatively (or in addition to snapshotting), Redis can run in append mode. Any time a key changes, an append-only file is updated on disk. In some cases it's acceptable to lose 60 seconds worth of data, in exchange for performance, should there be some hardware or software failure. In some cases such a loss is not acceptable. Redis gives you the option. In chapter 5 we'll see a third option, which is offloading persistence to a slave.
+Кроме того, в добавок к сохранению снимков базы на диске, Redis может быть запущен в режиме дозаписи (append mode). Каждый раз, когда ключ меняется, на диске дописывается запись в файле, открытом в режиме дозаписи (новые записи добавляются в конец файла). Иногда стоит принять риск потери данных последних 60 секунд в случае аппаратной или программной ошибки в обмен на производительность. В других случаях такой риск неприемлем. Redis дает вам выбрать. В главе 5 мы рассмотрим третью возможность - обеспечение персистентности за счет вспомогательного хранилища.
 
-With respect to memory, Redis keeps all your data in memory. The obvious implication of this is the cost of running Redis: RAM is still the most expensive part of server hardware.
+Что касается использования памяти, Redis хранит все данные в оперативной памяти. Явным следствием этого является цена использования Redis: оперативная память до сих пор является самой дорогой аппаратной частью серверов.
 
-I do feel that some developers have lost touch with how little space data can take. The Complete Works of William Shakespeare takes roughly 5.5MB of storage. As for scaling, other solutions tend to be IO- or CPU-bound. Which limitation (RAM or IO) will require you to scale out to more machines really depends on the type of data and how you are storing and querying it. Unless you're storing large multimedia files in Redis, the in-memory aspect is probably a non-issue. For apps where it is an issue you'll likely be trading being IO-bound for being memory bound.
+Я чувствую, что некоторые разработчики забывают о том, как мало места могут занимать данные. Полное собрание сочинений Уильяма Шекспира занимает примерно 5,5 МБ. Что касается масштабирования, другие решения, как правило, ограничены временем ввода/вывода или производительностью процессора. Какое из ограничений (память или ввод/вывод) вынудит вас масштабировать приложение на большем колчестве серверов зависит от типа обрабатываемых данных и от того, как вы их храните и запрашиваете. Пока вы не храните огромные медиа-файлы в Redis, хранение данных в оперативной памяти не должно быть проблемой. Для приложений, где это все же будет проблемой, вы скорее всего выберете дополнительный ввод/вывод, чем ограничения размера памяти.
 
-Redis did add support for virtual memory. However, this feature has been seen as a failure (by Redis' own developers) and its use has been deprecated.
+В Redis была реализована поддержка виртуальной памяти. Тем не менее, эта функция была признана неудачной (самими инженерами Redis) и ее использование не рекомендуется.
 
-(On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.
+К слову, 5,5 МБ сочинений Шекспира могут быть сжаты до примерно 2 МБ. Redis не использует автоматическое сжатие, но, поскольку он трактует данные, как набор байт, нет причин, по которым вы не могли бы обменять время обработки на дополнительную память путем сжатия/распаковки данных.
 
 ### Putting It Together
 
