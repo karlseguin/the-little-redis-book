@@ -163,19 +163,19 @@ Redis использует знакомую всем концепцию базы
 
 Важно понимать этот аспект Redis, поскольку это влияет на то, как ваше приложение с ним взаимодействует. Разработчики с опытом работы в SQL обычно стараются минимизировать количество обращений к базе данных. Это хороший совет для всех систем, включая Redis. Но, с учетом того, что мы имеем дело с боле простыми структурами данных, нам иногда придется обращаться к севреру Redis несколько раз для достижения цели. Такой шаблон доступа к данным может показаться неестественным на первый взгляд, но на самом деле это незначительно по сравнению с получаемой взамен производительностью.
 
-### In This Chapter
+### В Этой Главе
 
-Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves.
+Несмотря на то, что мы лишь немного поиграли с Redis, мы рассмотрели широкий спектр вопросов. Не волнуйтесь, если что-то не ясно до конца - как, например, запросы данных. В следующей главе мы перейдем к практике и все ваши вопросы, я надеюсь, найдут ответы.
 
-The important takeaway from this chapters are:
+Ключевые момент этой главы:
 
-* Keys are strings which identify pieces of data (values)
+* Ключи - это строки, идентифицирующие фаргменты данных (значения)
 
-* Values are arbitrary byte arrays that Redis doesn't care about
+* Значнения - это произвольные массивы байт, которым Redis не придает никакого смысла
 
-* Redis exposes (and is implemented as) five specialized data structures
+* Redis предоставляет (и реализован на основе) пять специализированных структур данных
 
-* Combined, the above make Redis fast and easy to use, but not suitable for every scenario
+* Все упомянутое вместе делает Redis быстрым и простым в использовании, но не подходящим для любого сценария использования
 
 \clearpage
 
