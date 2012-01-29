@@ -681,7 +681,7 @@ Or you can disable a command by setting the new name to an empty string.
 
 As you start using Redis, you might wonder "how many keys can I have?". You might also wonder how many fields can a hash have (especially when you use it to organize your data), or how many elements can lists and sets have? Per instance, the practical limits for all of these is in the hundreds of millions.
 
-Когда вы начнете использовать Redis, у вас может возникнуть вопрос "как много ключей я могу использовать?". Кроме этого, вас могут интересовать ограничения на количество полей в хешах (особенно, когда вы используете их для хранения ваших данных) и количество элементов в списках и множествах. Для одного узла, лимиты представляют собой числа порядка сотен миллионов.
+Когда вы начнете использовать Redis, у вас может возникнуть вопрос: "Как много ключей я могу использовать?". Кроме этого, вас могут интересовать ограничения на количество полей в хешах (особенно, когда вы используете их для хранения ваших данных) и количество элементов в списках и множествах. Для одного узла, лимиты представляют собой числа порядка сотен миллионов.
 
 ### Replication
 
@@ -721,7 +721,7 @@ Replication is the first tool a growing site can leverage. Some commands are mor
 
 Beyond this, truly scaling Redis comes down to distributing your keys across multiple Redis instances (which could be running on the same box, remember, Redis is single-threaded). For the time being, this is something you'll need to take care of (although a number of Redis drivers do provide consistent-hashing algorithms). Thinking about your data in terms of horizontal distribution isn't something we can cover in this book. It's also something you probably won't have to worry about for a while, but it's something you'll need to be aware of regardless of what solution you use.
 
-Помимо этого, по-настоящему масштабируемый Redis использует распределение ключей между несколькими узлами Redis (которые могут быть запущены в той же системе - как мы помним, Redis однопоточный). В настоящее время, это то, над чем приходится заботится нам (хотя ряд драйверов предоставляют ???? consistent-hashing algorithms ????). Мы не может покрыть в этой книге вопросы, касающиеся работы с данными в ракурсе горизонтального масштабирования. Тем более, вам скорее всего не придется беспокоится о подобных вещах, однако стоит быть в курсе независимо от того, какое решение вы используете.
+Помимо этого, по-настоящему масштабируемый Redis использует распределение ключей между несколькими узлами Redis (которые могут быть запущены в той же системе - как мы помним, Redis однопоточный). В настоящее время, это то, над чем приходится заботится нам (хотя ряд драйверов предоставляют алгоритмы консистентного хеширования). (*Консистентное хеширование - способ создания распределенных хеш-таблиц, при котором вывод из строя одного или более хранилищ - серверов, "корзин" - не приводит к необходимости полного переразмещения всех хранимых значений - прим. перев.*) Мы не может покрыть в этой книге вопросы, касающиеся работы с данными в ракурсе горизонтального масштабирования. Тем более, вам скорее всего не придется беспокоится о подобных вещах, однако стоит быть в курсе независимо от того, какое решение вы используете.
 
 The good news is that work is under way on Redis Cluster. Not only will this offer horizontal scaling, including rebalancing, but it'll also provide automated failover for high availability.
 
@@ -737,7 +737,7 @@ High availability and scaling is something that can be achieved today, as long a
 
 Given the number of projects and sites using Redis already, there can be no doubt that Redis is production-ready, and has been for a while. However, some of the tooling, especially around security and availability is still young. Redis Cluster, which we'll hopefully see soon, should help address some of the current management challenges.
 
-Учитывая количество проектов, уже использующих Redis, не может быть никаких сомнений, что эта система является ???? production-ready ????. Однако, некоторые из инструментов, особенно касающиеся безопасности и отказоустойчивости, все еще требуют доработки. Redis Cluster, который мы надеемся увидеть в ближайшее время, должен помочь решить некоторые из существующих проблем администрирования.
+Учитывая количество проектов, уже использующих Redis, не может быть никаких сомнений, что эта система является пригодной для практического использования. Однако, некоторые из инструментов, особенно касающиеся безопасности и отказоустойчивости, все еще требуют доработки. Redis Cluster, который мы надеемся увидеть в ближайшее время, должен помочь решить некоторые из существующих проблем администрирования.
 
 \clearpage
 
