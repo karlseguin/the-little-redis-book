@@ -636,7 +636,7 @@ Our last chapter is dedicated to some of the administrative aspects of running R
 
 When you first launched the Redis server, it warned you that the `redis.conf` file could not be found. This file can be used to configure various aspects of Redis. A well documented `redis.conf` file is available for each release of Redis. The sample file contains the default configuration options, so it's useful to both understand what the settings do and what their defaults are. You can find it at <https://github.com/antirez/redis/raw/2.4.6/redis.conf>.
 
-Когда вы впервые запустили сервер Redis, он предупредил вас, что файл `redis.conf` не может быть найден. Этот файл может быть использован для настройки различных аспектов Redis. Хорошо документированный файл `redis.conf` доступен для каждой release-версии Redis. Образец файла содержит стандартные варианты конфигурации, что очень полезно для понимания, для чего предназначены конкретные опции и каковы их значения по умолчанию. Вы можете найти его на <https://github.com/antirez/redis/raw/2.4.6/redis.conf>.
+Когда вы впервые запустили сервер Redis, он предупредил вас, что файл `redis.conf` не может быть найден. Этот файл может быть использован для настройки различных аспектов Redis. Хорошо документированный файл `redis.conf` доступен для каждой release-версии Redis. Образец файла содержит стандартные варианты конфигурации, что очень полезно для понимания того, для чего предназначены конкретные опции и каковы их значения по умолчанию. Вы можете найти его на <https://github.com/antirez/redis/raw/2.4.6/redis.conf>.
 
 **This is the config file for Redis 2.4.6. You should replace "2.4.6" in the above URL with your version. You can find your version by running the `info` command and looking at the first value.**
 
@@ -652,7 +652,7 @@ In addition to configuring Redis via the `redis.conf` file, the `config set` com
 
 There's also the `config get` command which displays the value of a setting. This command supports pattern matching. So if we want to display everything related to logging, we can do:
 
-Существует также команда `config get`, которая выводит значения конфигурации. Эта команда поддерживает поиск по образцу. Мы можем посмотреть все опции, касающиеся логгирования следующим способом:
+Существует также команда `config get`, которая выводит значения конфигурации. Эта команда поддерживает поиск по образцу. Мы можем посмотреть все опции, касающиеся журналирования следующим способом:
 
 	config get *log*
 
@@ -662,7 +662,7 @@ There's also the `config get` command which displays the value of a setting. Thi
 
 Redis can be configured to require a password. This is done via the `requirepass` setting (set through either the `redis.conf` file or the `config set` command). When `requirepass` is set to a value (which is the password to use), clients will need to issue an `auth password` command.
 
-Redis можно настроить так, чтобы он требовал пароль. За это отвечает опция конфигурации `requirepass` (устанавливается через `redis.conf` или команду `config set`). Когда опция `requirepass` устанавливается в какое-либо значение, клиенты должны выполнять команду `auth password` при обращении к серверу.
+Redis можно настроить так, чтобы он требовал пароль. За это отвечает опция конфигурации `requirepass` (устанавливается через `redis.conf` или командой `config set`). Когда опция `requirepass` устанавливается в какое-либо значение, клиенты должны выполнять команду `auth password` при обращении к серверу.
 
 Once a client is authenticated, they can issue any command against any database. This includes the `flushall` command which erases every key from every database. Through the configuration, you can rename commands to achieve some security through obfuscation:
 
@@ -697,7 +697,7 @@ Replication helps protect your data by copying to different servers. Replication
 
 Unfortunately, Redis replication doesn't yet provide automated failover. If the master dies, a slave needs to be manually promoted. Traditional high-availability tools that use heartbeat monitoring and scripts to automate the switch are currently a necessary headache if you want to achieve some sort of high availability with Redis.
 
-К сожалению, система репликации Redis еще не поддерживает автоматическую защиту от падений. Если master-узел выходит из строя, необходимо вручную выбрать новый из slave-узлов. Традиционно, необходимо использовать утилиты, использующие мониторинг и специальные скрипты для переключения master-узлов, если вам необходима устойчивая к сбоям система.
+К сожалению, система репликации Redis еще не поддерживает автоматическую отказоустойчивость. Если master-узел выходит из строя, необходимо вручную выбрать новый из slave-узлов. Необходимо использовать традиционные утилиты, использующие мониторинг и специальные скрипты для переключения master-узлов, если вам необходима устойчивая к сбоям система.
 
 ### Backups
 
@@ -705,11 +705,11 @@ Unfortunately, Redis replication doesn't yet provide automated failover. If the 
 
 Backing up Redis is simply a matter of copying Redis' snapshot to whatever location you want (S3, FTP, ...). By default Redis saves its snapshop to a file named `dump.rdb`. At any point in time, you can simply `scp`, `ftp` or `cp` (or anything else) this file.
 
-Резервное копирование Redis это просто копирование снапшота Redis в любое место (Amazon S3, FTP, ...). По умолчанию, Redis сохраняет данные в файл `dump.rdb`. В любой момент времени вы можете скопировать этот файл куда угодно.
+Резервное копирование Redis это просто копирование снимка базы данных Redis в любое место (Amazon S3, FTP, ...). По умолчанию, Redis сохраняет данные в файл `dump.rdb`. В любой момент времени вы можете скопировать этот файл куда угодно.
 
 It isn't uncommon to disable both snapshotting and the append-only file (aof) on the master and let a slave take care of this. This helps reduce the load on the master and lets you set more aggressive saving parameters on the slave without hurting overall system responsiveness.
 
-Допускается отключение сохранения данных на диск у master-узлов. Можно доверить эти действия slave-узлам. Данный шаг уменьшает нагрузку на master-узел и позволяет slave-узлам использовать более агрессивные настройки сохранения данных, но не затрагивая общую отзывчивость системы.
+Допускается отключение сохранения данных на диск у master-узлов. Можно доверить эти действия slave-узлам. Данный шаг уменьшает нагрузку на master-узел и позволяет slave-узлам использовать более агрессивные настройки сохранения данных, не затрагивая общую отзывчивость системы.
 
 ### Scaling and Redis Cluster
 
@@ -717,11 +717,11 @@ It isn't uncommon to disable both snapshotting and the append-only file (aof) on
 
 Replication is the first tool a growing site can leverage. Some commands are more expensive than others (`sort` for example) and offloading their execution to a slave can keep the overall system responsive to incoming queries.
 
-Репликация является первым инструментом, который используют при росте нагрузке на систему. Некоторые команды являются более дорогостоящими, чем другие (например `sort`). Такие запросы предпочтительно выполнять не на master-узлах, а на slave. В этом случае удастся сохранять общую отзывчивость системы.
+Репликация является первым инструментом, который используют при росте нагрузки на систему. Некоторые команды являются более дорогостоящими, чем другие (например `sort`). Такие запросы предпочтительно выполнять не на master-узлах, а на slave. В этом случае удастся сохранять общую доступность системы.
 
 Beyond this, truly scaling Redis comes down to distributing your keys across multiple Redis instances (which could be running on the same box, remember, Redis is single-threaded). For the time being, this is something you'll need to take care of (although a number of Redis drivers do provide consistent-hashing algorithms). Thinking about your data in terms of horizontal distribution isn't something we can cover in this book. It's also something you probably won't have to worry about for a while, but it's something you'll need to be aware of regardless of what solution you use.
 
-Помимо этого, по-настоящему масштабируемый Redis использует распределение ключей между несколькими узлами Redis (которые могут быть запущены в той же системе - как мы помним, Redis однопоточный). В настоящее время, это то, над чем приходится заботится нам (хотя ряд драйверов предоставляют алгоритмы консистентного хеширования). (*Консистентное хеширование - способ создания распределенных хеш-таблиц, при котором вывод из строя одного или более хранилищ - серверов, "корзин" - не приводит к необходимости полного переразмещения всех хранимых значений - прим. перев.*) Мы не может покрыть в этой книге вопросы, касающиеся работы с данными в ракурсе горизонтального масштабирования. Тем более, вам скорее всего не придется беспокоится о подобных вещах, однако стоит быть в курсе независимо от того, какое решение вы используете.
+Помимо этого, по-настоящему масштабируемый Redis использует распределение ключей между несколькими узлами Redis (которые могут быть запущены в той же системе - как мы помним, Redis однопоточный). В настоящее время, это то, о чем приходится заботится нам (хотя ряд драйверов предоставляют алгоритмы консистентного хеширования). (*Консистентное хеширование - способ создания распределенных хеш-таблиц, при котором вывод из строя одного или более хранилищ - серверов, "корзин" - не приводит к необходимости полного переразмещения всех хранимых значений - прим. перев.*) Мы не может покрыть в этой книге вопросы, касающиеся работы с данными в ракурсе горизонтального масштабирования. Тем более, вам скорее всего не придется беспокоится о подобных вещах, однако стоит быть в курсе независимо от того, какое решение вы используете.
 
 The good news is that work is under way on Redis Cluster. Not only will this offer horizontal scaling, including rebalancing, but it'll also provide automated failover for high availability.
 
