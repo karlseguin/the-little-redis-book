@@ -151,17 +151,17 @@ Redis использует знакомую всем концепцию базы
 
 К слову, 5,5 МБ сочинений Шекспира могут быть сжаты до примерно 2 МБ. Redis не использует автоматическое сжатие, но, поскольку он трактует данные, как набор байт, нет причин, по которым вы не могли бы обменять время обработки на дополнительную память путем сжатия/распаковки данных.
 
-### Putting It Together
+### Собираем Все Вместе
 
-We've touched on a number of high level topics. The last thing I want to do before diving into Redis is bring some of those topics together. Specifically, query limitations, data structures and Redis' way to store data in memory.
+Мы коснулись нескольких общих тем. Последнее, что я хотел бы сделать перед погружение в Redis, это собрать несколько этих тем вместе. А именно, ограничения запросов, структуры данных и способ хранения данных Redis в оперативной памяти.
 
-When you add those three things together you end up with something wonderful: speed. Some people think "Of course Redis is fast, everything's in memory." But that's only part of it. The real reason Redis shines versus other solutions is its specialized data structures.
+Когда вы собираете три эти вещи вместе, вы получаете нечто замечательно - скорость. Некоторые люди думают: "Конечно, Redis быстр, ведь все хранится в памяти". Но это только часть. Настоящая причина, по которой Redis так хорош по сравнению с другими решениями, заключается в его специализированных структурах данных.
 
-How fast? It depends on a lot of things - which commands you are using, the type of data, and so on. But Redis' performance tends to be measured in tens of thousands, or hundreds of thousands of operations **per second**. You can run `redis-benchmark` (which is in the same folder as the `redis-server` and `redis-cli`) to test it out yourself.
+Насколько высока скорость? Это зависит от многих вещей: какие команды и типы данных вы используете и так далее. Но производительность Redis обычно измеряется в десятках тысяч или даже сотнях тысяч операций **в секунду**. Вы можете запустить `redis-benchmark` (расположен в той же директории, что и `redis-server` и `redis-cli`), чтобы проверить это.
 
-I once changed code which used a traditional model to using Redis. A load test I wrote took over 5 minutes to finish using the relational model. It took about 150ms to complete in Redis. You won't always get that sort of massive gain, but it hopefully gives you an idea of what we are talking about
+Однажды я переписал код, использовавший традиционную модель, для использования Redis. Нагрузочный тест, написанный мной, занимал более 5 минут при использовании реляционной модели данных. Он занял примерно 150 мс с Redis. Вы не всегда будете получать такой значительный прирост, но это, я надеюсь, даст вам представление о том, с чем мы имеем дело.
 
-It's important to understand this aspect of Redis because it impacts how you interact with it. Developers with an SQL background often work at minimizing the number of round trips they make to the database. That's good advice for any system, including Redis. However, given that we are dealing with simpler data structures, we'll sometimes need to hit the Redis server multiple times to achieve our goal. Such data access patterns can feel unnatural at first, but in reality it tends to be an insignificant cost compared to the raw performance we gain.
+Важно понимать этот аспект Redis, поскольку это влияет на то, как ваше приложение с ним взаимодействует. Разработчики с опытом работы в SQL обычно стараются минимизировать количество обращений к базе данных. Это хороший совет для всех систем, включая Redis. Но, с учетом того, что мы имеем дело с боле простыми структурами данных, нам иногда придется обращаться к севреру Redis несколько раз для достижения цели. Такой шаблон доступа к данным может показаться неестественным на первый взгляд, но на самом деле это незначительно по сравнению с получаемой взамен производительностью.
 
 ### In This Chapter
 
