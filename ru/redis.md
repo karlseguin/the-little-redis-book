@@ -685,14 +685,8 @@ Redis поддерживает репликацию, которая означа
 
 \clearpage
 
-## Conclusion
-
 ## Заключение
-
-In a lot of ways, Redis represents a simplification in the way we deal with data. It peels away much of the complexity and abstraction available in other systems. In many cases this makes Redis the wrong choice. In others it can feel like Redis was custom-built for your data.
 
 Redis использует множество способов облегчить наше взаимодействие с данными. Эта система убирает большую часть сложности и абстракции, присущих другим системам. Во многих случаях это делает Redis неудачным выбором. Но в других случаях может показаться, что Redis был написан для решения вашей конкретной проблемы.
 
-Ultimately it comes back to something I said at the very start: Redis is easy to learn. There are many new technologies and it can be hard to figure out what's worth investing time into learning. When you consider the real benefits Redis has to offer with its simplicity, I sincerely believe that it's one of the best investments, in terms of learning, that you and your team can make.
-
-В конечном итоге мы вернулись к тому, что я говорил в самом начале: Redis прост в освоении. Когда вокруг так много новых технологий, не просто понять, что стоит времени на обучение. Когда вы ощутите реальное преимущество, которое Redis может предложить, я уверен, что у вас не останется вопросов о том, уделять ли время на изучение Redis.
+В конечном итоге мы вернулись к тому, о чем я говорил в самом начале: Redis прост в освоении. Когда вокруг так много новых технологий, не просто понять, на изучение какой стоит потратить время. Когда вы увидите реальные преимущества, которые Redis может предложить, я уверен, что у вас не останется вопросов о том, уделять ли время на изучение Redis.
