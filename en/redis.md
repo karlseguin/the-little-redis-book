@@ -148,7 +148,7 @@ I do feel that some developers have lost touch with how little space data can ta
 
 Redis did add support for virtual memory. However, this feature has been seen as a failure (by Redis' own developers) and its use has been deprecated. 
 
-(On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.
+(On a side note, that 5.5MB file of Shakespeare's complete works can be compressed down to roughly 2MB. Redis doesn't do auto-compression but, since it treats values as bytes, there's no reason you can't trade processing time for RAM by compressing/decompressing the data yourself.)
 
 ### Putting It Together
 
@@ -166,7 +166,7 @@ It's important to understand this aspect of Redis because it impacts how you int
 
 Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves. 
 
-The important takeaway from this chapters are:
+The important takeaway from this chapter are:
 
 * Keys are strings which identify pieces of data (values)
 
@@ -376,7 +376,7 @@ Maintenance cost aside, if you are anything like me, you might cringe at the pro
 
 If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient). 
 
-Again, having to manually deal with references in Redis in unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
+Again, having to manually deal with references in Redis is unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
 
 ### Round Trips and Pipelining 
 
@@ -573,7 +573,7 @@ To sort the bugs by severity, from highest to lowest, you'd do:
 
 Redis will substitute the `*` in our pattern (identified via `by`) with the values in our list/set/sorted set. This will create the key name that Redis will query for the actual values to sort by.
 
-Although you can have millions of keys within Redis, I think the above can get a little messy. Thankfully sort can also work on hashes and their fields. Instead of having a bunch of top-level keys you can leverage hashes:
+Although you can have millions of keys within Redis, I think the above can get a little messy. Thankfully `sort` can also work on hashes and their fields. Instead of having a bunch of top-level keys you can leverage hashes:
 
 	hset bug:12339 severity 3
 	hset bug:12339 priority 1
@@ -616,7 +616,7 @@ Our last chapter is dedicated to some of the administrative aspects of running R
 
 ### Configuration
 
-When you first launched the Redis server, it warned you that the `redis.conf` file could not be found. This file can be used to configure various aspects of Redis. A well documented `redis.conf` file is available for each release of Redis. The sample file contains the default configuration options, so it's useful to both understand what the settings do and what their defaults are. You can find it at <https://github.com/antirez/redis/raw/2.4.6/redis.conf>.
+When you first launched the Redis server, it warned you that the `redis.conf` file could not be found. This file can be used to configure various aspects of Redis. A well-documented `redis.conf` file is available for each release of Redis. The sample file contains the default configuration options, so it's useful to both understand what the settings do and what their defaults are. You can find it at <https://github.com/antirez/redis/raw/2.4.6/redis.conf>.
 
 **This is the config file for Redis 2.4.6. You should replace "2.4.6" in the above URL with your version. You can find your version by running the `info` command and looking at the first value.**
 
@@ -641,7 +641,7 @@ Or you can disable a command by setting the new name to an empty string.
 
 ### Size Limitations
 
-As you start using Redis, you might wonder "how many keys can I have?". You might also wonder how many fields can a hash have (especially when you use it to organize your data), or how many elements can lists and sets have? Per instance, the practical limits for all of these is in the hundreds of millions.
+As you start using Redis, you might wonder "how many keys can I have?" You might also wonder how many fields can a hash have (especially when you use it to organize your data), or how many elements can lists and sets have? Per instance, the practical limits for all of these is in the hundreds of millions.
 
 
 ### Replication

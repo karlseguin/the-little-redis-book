@@ -14,7 +14,7 @@ The book is written in [Markdown](http://daringfireball.net/projects/markdown/) 
 To generate PDF, Kindle and EPUB formats, download and install [pandoc](http://johnmacfarlane.net/pandoc/), a universal document converter.
 
 ## Generating the PDF ##
-pandoc includes markdown2pdf to generate the PDF using using a variation of <https://github.com/claes/pandoc-templates>:
+pandoc includes markdown2pdf to generate the PDF using a variation of <https://github.com/claes/pandoc-templates>:
 
 	#!/bin/sh
 	paper=a4paper
