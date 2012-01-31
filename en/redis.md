@@ -166,7 +166,7 @@ It's important to understand this aspect of Redis because it impacts how you int
 
 Although we barely got to play with Redis, we did cover a wide range of topics. Don't worry if something isn't crystal clear - like querying. In the next chapter we'll go hands-on and any questions you have will hopefully answer themselves. 
 
-The important takeaway from this chapter are:
+The important takeaways from this chapter are:
 
 * Keys are strings which identify pieces of data (values)
 
