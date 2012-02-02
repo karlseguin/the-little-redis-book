@@ -17,7 +17,7 @@ The Little Redis Book - это бесплатная книга про Redis.
 Kindle и ePub форматы можно сгенерировать с помощью [PanDoc](http://johnmacfarlane.net/pandoc/).
 
 ## Generating the PDF ##
-pandoc includes markdown2pdf to generate the PDF using using a variation of <https://github.com/claes/pandoc-templates>:
+pandoc includes markdown2pdf to generate the PDF using a variation of <https://github.com/claes/pandoc-templates>:
 
 	#!/bin/sh
 	paper=a4paper
