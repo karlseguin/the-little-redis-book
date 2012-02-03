@@ -444,7 +444,7 @@ That's a high level overview of Redis' five data structures. One of the neat thi
 
 \clearpage
 
-``````````````
+
 
 ## Capitolo 3 -  Chapter 3 - Sfruttare al Massimo le Strutture Dati 
 
@@ -482,38 +482,89 @@ La successiva fascia di performance è quella logaritmica, o O(log(N)). Deriva c
 Logarithmic, or O(log(N)), is the next fastest possibility because it needs to scan through smaller and smaller partitions. Using this type of divide and conquer approach, a very large number of items quickly gets broken down in a few iterations. `zadd` is a O(log(N)) command, where N is the number of elements already in the set.
 >
 
-In una fascia più alta ancora vi è la complessità lineare o O(N). Un'interrogazione su una colonna non indicizzata in una tabella è un'operazione O(N).
+``````````````
 
+In una fascia più alta ancora vi è la complessità lineare o O(N). Un'interrogazione su una colonna non indicizzata in una tabella è un'operazione di complessit' O(N). Lo è per esempio l'operazione `ltrim`. Ad ogni modo, nel caso di `ltrim`, N non è il numero di elementi della lista, quanto piuttosto il numero di elementi da rimuovere. Usare `ltrim` per rimuover un elemento da una lista di un milione di elementi sarà più veloce che non rimuovere 10 elementi da una lista formata da miglialia di oggetti. (Anche se probabilmente saranno entrambe probabilmente così veloci che non ci si accorgerà comunque della differenza).
+<
 Next we have linear commands, or O(N). Looking for a non-indexed row in a table is an O(N) operation. So is using the `ltrim` command. However, in the case of `ltrim`, N isn't the number of elements in the list, but rather the elements being removed. Using `ltrim` to remove 1 item from a list of millions will be faster than using `ltrim` to remove 10 items from a list of thousands. (Though they'll probably both be so fast that you wouldn't be able to time it.)
+>
 
+`zremrangebyscore` che rimuove da un insieme ordinato elementi che abbiano punteggio compreso tra un minimo e un massimo ha invece complessità O(log(N)+M). Questo la rende un misto. Leggendo la documentazione vediamo che N è il numero totale di elementi nell'insieme e M è il numero di elementi da rimuovere. In altre parole, il numero di elementi da rimuovere tenderà a fornire un contributo più significativo, in termini di performance, del numero totale degli elementi della lista.
+
+<
 `zremrangebyscore` which removes elements from a sorted set with a score between a minimum and a maximum value has a complexity of O(log(N)+M). This makes it a mix. By reading the documentation we see that N is the number of total elements in the set and M is the number of elements to be removed. In other words, the number of elements that'll get removed is probably going to be more significant, in terms of performance, than the total number of elements in the list.
+>
 
+Il comando `sort`, che discuteremo in maniera dettagliata nel prossimo capitolo, possiede una complessità O(N+M*log(M)). Da questo si evince come sia uno dei comandi Redis maggiormente complessi.
+
+<
 The `sort` command, which we'll discuss in greater detail in the next chapter has a complexity of O(N+M*log(M)). From its performance characteristic, you can probably tell that this is one of Redis' most complex commands.
+>
 
+Per completezza si aggiunge che esistono altri tipi di complessità: polinomiale (ad esempio O(N^2)) e esponenziale (O(C^N)). Più grande è N, di gran lunga peggiori sono le performance rispetto ad un valore di N più basso. Nessun comando Redis possiede complessità di questo tipo.
+
+<
 There are a number of other complexities, the two remaining common ones are O(N^2) and O(C^N). The larger N is, the worse these perform relative to a smaller N. None of Redis' commands have this type of complexity.
+>
 
+E' opportuno precisare che la notazione O grande tratta il caso peggiore. Quando diciamo che un'operazione su una lista lunga N ha complessità O(N) (lineare), potrebbe terminare al primo elemento oppure, nel caso peggiore appunto, potrebbe dover scorrere tutta la lista fino all'ultimo elemento.
+
+<
 It's worth pointing out that the Big O notation deals with the worst case. When we say that something takes O(N), we might actually find it right away or it might be the last possible element.
+>
 
+### Interrogazioni Pseudo Multi Chiave
 
-### Pseudo Multi Key Queries
+Un problema ricorrente è la ricerca di un valore tramite chiavi diverse da quella primaria (l'id). Ad esempio si voglia cercare un utente e poi mostrare i suoi dati data la sua email. Una pessima soluzione è la duplicazione dei dati utente in due valori: 
 
-A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
-
-	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}"
+	// non farlo!
+	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}" 
 	set users:9001 "{id: 9001, email: 'leto@dune.gov', ...}"
 
-This is bad because it's a nightmare to manage and it takes twice the amount of memory.
 
+<
+A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
+>
+
+E' una soluzione pessima perché è impossibile mantenere sempre coerenti i due valori e inotlre si va ad occupare il doppio della memoria.
+
+<
+This is bad because it's a nightmare to manage and it takes twice the amount of memory.
+>
+
+
+Sarebbe bello se Redis permettesse di collegare una chiave ad un'altra, ma non lo permette (anzi probabilmente non lo farà mai in quanto uno dei fini dello sviluppo di Redis è mantenere l'interfaccia di programmazione snella e semplice). Nondimeno Redis fornisce una soluzione alternativa: gli hash.
+
+Usando un hash, possiamo evitare la necessità della duplicazione:
+
+	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
+	hset users:lookup:email leto@dune.gov 9001
+
+<
 It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
 
 Using a hash, we can remove the need for duplication:
 	
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
+>
 
+Stiamo cioè usando un campo come pseudo indice secondario, referenziando in questo modo un singolo oggetto. Per ottenere i dati utente a partire dall'id si usa il normale comando `get`: 
+
+	get users:9001
+
+<
 What we are doing is using the field as a pseudo secondary index and referencing the single user object. To get a user by id, we issue a normal `get`:
 
 	get users:9001
+>
+
+Per ottenere un utente data l'email, eseguiamo quindi un `hget` seguito da un `get` (in Ruby):
+
+	id = redis.hget('users:lookup:email', 'leto@dune.gov')
+	user = redis.get("users:#{id}")
+
+``````````````````
 
 To get a user by email, we issue an `hget` followed by a `get` (in Ruby):
 
