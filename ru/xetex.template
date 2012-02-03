@@ -1,0 +1,39 @@
+\documentclass{book}
+\usepackage[dvipsnames,usenames]{color}
+\usepackage{fullpage}
+\usepackage{changepage}
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{setspace}
+\usepackage{hyperref}
+\setmainfont{$mainfont$}
+\setsansfont{$sansfont$}
+\setmonofont{$monofont$}
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{12pt plus 2pt minus 1pt}
+\linespread{1.2}
+
+
+$if(fancy-enums)$
+\usepackage{enumerate}
+$endif$
+\setcounter{secnumdepth}{-1}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,%
+    citecolor=YellowOrange,%
+    filecolor=YellowOrange,%
+    linkcolor=YellowOrange,%
+    urlcolor=YellowOrange
+}
+
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{*0}{*-2}
+\titlespacing{\subsection}{0pt}{*0}{*-2}
+\titlespacing{\subsubsection}{0pt}{*1}{*-2}
+
+\begin{document}
+$body$
+\end{document}

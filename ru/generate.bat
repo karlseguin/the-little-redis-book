@@ -1,0 +1,1 @@
+markdown2pdf --xetex --template=xetex.template -V paper=a4paper -V hmargin=3cm -V vmargin=3cm -V mainfont="Verdana" -V sansfont="Tahoma" -V language:russian -V monofont="Consolas" -V geometry=portrait -V columns=onecolumn -V fontsize=11pt -V nohyphenation=true redis.md -o redis_ru.pdf
