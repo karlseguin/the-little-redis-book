@@ -540,7 +540,7 @@ Usando un hash, possiamo evitare la necessità della duplicazione:
 	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
 	hset users:lookup:email leto@dune.gov 9001
 
-<
+<  da rivedere
 It would be nice if Redis let you link one key to another, but it doesn't (and it probably never will). A major driver in Redis' development is to keep the code and API clean and simple. The internal implementation of linking keys (there's a lot we can do with keys that we haven't talked about yet) isn't worth it when you consider that Redis already provides a solution: hashes.
 
 Using a hash, we can remove the need for duplication:
@@ -564,52 +564,102 @@ Per ottenere un utente data l'email, eseguiamo quindi un `hget` seguito da un `g
 	id = redis.hget('users:lookup:email', 'leto@dune.gov')
 	user = redis.get("users:#{id}")
 
-``````````````````
+
+
 
 To get a user by email, we issue an `hget` followed by a `get` (in Ruby):
 
 	id = redis.hget('users:lookup:email', 'leto@dune.gov')
 	user = redis.get("users:#{id}")
 
+``````````````````
+
+Questa tecnica verrà usata molto spesso. Secondo me, è proprio in questo che Redis brilla, ma non è affatto un caso d'uso ovvio fino a che non ce ne si rende conto.
+
 This is something that you'll likely end up doing often. To me, this is where hashes really shine, but it isn't an obvious use-case until you see it.
 
-### References and Indexes
+### Referenze e Indici
 
+Si sono visti un paio di esempi in cui un valore referenzia un altro. Si è visto nell'esempio con la list e si è visto nella sezione qui sopra nella quale un hash ha reso l'interrogazione molto più semplice. Ne consegue di dover amministrare programmaticamente gli indici e le referenze tra valori. Per essere onesti, penso che questo possa risultare noioso, specialmente quando si dovranno aggiungere/aggiornare/cancellare manualmente queste refernze. Non c'è una soluzione magica per questo problema in Redis.
+
+<
 We've seen a couple examples of having one value reference another. We saw it when we looked at our list example, and we saw it in the section above when using hashes to make querying a little easier. What this comes down to is essentially having to manually manage your indexes and references between values. Being honest, I think we can say that's a bit of a downer, especially when you consider having to manage/update/delete these references manually. There is no magic solution to solving this problem in Redis. 
+>
 
-We already saw how sets are often used to implement this type of manual index:
+
+Si è già visto come gli insiemi siano spesso usati per implementare questo tipo programmatico di indice:
 
 	sadd friends:leto ghanima paul chani jessica
+<
+We already saw how sets are often used to implement this type of manual index:
+>
 
-Each member of this set is a reference to a Redis string value containing details on the actual user. What if `chani` changes her name, or deletes her account? Maybe it would make sense to also track the inverse relationships:
+Ogni elemento di questo insieme rappresenta un riferimento a una stringa Redis contenente i dettagli completi di ogni utente. Ma cosa succede se `chani` dovessere essere rinominato o il suo account dovesse essere cancellato? Forse potrebbe aver senso tracciare anche la relazione inversa:
 
 	sadd friends_of:chani leto paul
+<
+Each member of this set is a reference to a Redis string value containing details on the actual user. What if `chani` changes her name, or deletes her account? Maybe it would make sense to also track the inverse relationships:
+>
 
+A parte la difficoltà di manutenere coerente queste strutture, si avrà un aumento di spazio occupato e di tempo di processore. 
+Nella prossima sezione si vedranno infatti dei metodi per ridurre questi costi.
+
+<
 Maintenance cost aside, if you are anything like me, you might cringe at the processing and memory cost of having these extra indexed values. In the next section we'll talk about ways to reduce the performance cost of having to do extra round trips (we briefly talked about it in the first chapter). 
+>
 
+
+Se ci si sofferma però, i database relazionali hanno lo stesso tipo di *overhead*. Gli indici occupano memoria, devono essere scansiti o idealmente interrogati, e successivamente il record corrispondente viene restituito. Questo *overhead* è reso trasparente dai database ma è comunque presente (anche se vengono fatte un sacco di ottimizzazioni per rendere il tutto molto efficiente).
+
+<
 If you actually think about it though, relational databases have the same overhead. Indexes take memory, must be scanned or ideally seeked and then the corresponding records must be looked up. The overhead is neatly abstracted away (and they  do a lot of optimizations in terms of the processing to make it very efficient). 
+>
 
-Again, having to manually deal with references in Redis in unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
+Ad ogni modo ogni prematura preoccupazione riguardo performance o memoria va testata. Probabilmente verrà scoperto che è un falso problema.
 
-### Round Trips and Pipelining 
+<
+Again, having to manually deal with references in Redis is unfortunate. But any initial concerns you have about the performance or memory implications of this should be tested. I think you'll find it a non-issue.
+>
 
+
+###  Round Trips and Pipelining 
+
+Si è detto in precedenza che in Redis può risultare comodo effettuare frequenti interazioni col server. A questo riguardo è opportuno introdurre alcune caratteristiche che aiuteranno a sfruttare al meglio questa frequente comunicazione col server.
+
+<
 We already mentioned that making frequent trips to the server is a common pattern in Redis. Since it is something you'll do often, it's worth taking a closer look at what features we can leverage to get the most out of it.
+>
 
-First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values: 
+Prima di tutto, molti comandi possiedono un *gemello* che accetta parametri multipli. Si è visto ad esempio `mget` che accetta chiavi multiple e ritorna i valori associati a ciascuna:
 
 	keys = redis.lrange('newusers', 0, 10)
 	redis.mget(*keys.map {|u| "users:#{u}"})
 
-Or the `sadd` command which adds 1 or more members to a set:
+<
+First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values: 
+>
+
+Oppure il comando `sadd` che aggiunge uno o più elementi a un insieme:
 
 	sadd friends:vladimir piter
 	sadd friends:paul jessica leto "leto II" chani
+<
+Or the `sadd` command which adds 1 or more members to a set:
+>
 
+Redis offre in aggiunta la *pipelining*. Normalmente un si manda una richiesta al server Redis e si aspetta la risposta prima di poter inviare la richiesta successiva. Attraverso il meccanismo del *pipelining* si possono inviare una serie di interrogazioni senza dover aspettare la risposta di ciascuna. Questo riduce l'*overhead* di rete e aumenta considerevolmente le performance.
+
+<
 Redis also supports pipelining. Normally when a client sends a request to Redis it waits for the reply before sending the next request. With pipelining you can send a number of requests without waiting for their responses. This reduces the networking overhead and can result in significant performance gains. 
+>
 
+A questo proposito è opportuno notare che Redis userà la memoria per accodare i comandi, per questo potrebbe essere una buona idea raggrupparli in porzioni più piccole. Per ottimizzare i raggruppamenti è opportuno considerare la grandezza dei parametri dei comandi coinvolti: per dare un'idea, se si stanno impartendo comandi con parametri di circa 50 caratteri, si possono raggruppare migliaia o anche decine di migliaia di comandi.
+
+<
 It's worth noting that Redis will use memory to queue up the commands, so it's a good idea to batch them. How large a batch you use will depend on what commands you are using, and more specifically, how large the parameters are. But, if you are issuing commands against ~50 character keys, you can probably batch them in thousands or tens of thousands.
+>
 
-Exactly how you execute commands within a pipeline will vary from driver to driver. In Ruby you pass a block to the `pipelined` method:
+In particolare la modalità di esecuzione del *pipelining* varia da driver a driver. Per esempio in Ruby viene passato un blocco al metodo `pipelined`:
 
 	redis.pipelined do
 	  9001.times do
@@ -617,19 +667,39 @@ Exactly how you execute commands within a pipeline will vary from driver to driv
 	  end
 	end
 
+
+<
+Exactly how you execute commands within a pipeline will vary from driver to driver. In Ruby you pass a block to the `pipelined` method:
+>
+
+Come si potrà immaginare, questa tecnica può velocizzare enormemente un importazione *batch*.
+
+<
 As you can probably guess, pipelining can really speed up a batch import!
+>
 
-### Transactions
+### Transazioni
 
+Ogni comando Redis è atomico, inclusi quelli che eseguono più cose assieme.
+In aggiunta a questo, Redis fornisce supporto a transazioni che coinvolgano più comandi.
+
+<
 Every Redis command is atomic, including the ones that do multiple things. Additionally, Redis has support for transactions when using multiple commands.
+>
 
+Redis, in realtà è *single-threaded*, ed è proprio per questo che vi è la garanzia che ogni comando sia atomico. Mentre un comando viene eseguito, nessun altro può essere in esecuzione. (Verrà brevemente trattata la scalabilità di questo modello nel seguito.) Questo aspetto diventa importante non appena si considera che alcuni comandi sono effettivamente scomponibili in più comandi, per esempio:
+
+`incr` è essenzialmente un `get` seguita da un `set`
+
+`getset` imposta il nuovo valore (`set`) e poi ritorna il valore originale (`get`)
+
+`setnx` prima controlla se la chiave esiste, e solo se non esiste ne imposta il valore
+
+<
 You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic. While one command is executing, no other command will run. (We'll briefly talk about scaling in a later chapter.) This is particularly useful when you consider that some commands do multiple things. For example:
+>
 
-`incr` is essentially a `get` followed by a `set`
 
-`getset` sets a new value and returns the original
-
-`setnx` first checks if the key exists, and only sets the value if it does not
 
 Although these commands are useful, you'll inevitably need to run multiple commands as an atomic group. You do so by first issuing the `multi` command, followed by all the commands you want to execute as part of the transaction, and finally executing `exec` to actually execute the commands or `discard` to throw away, and not execute the commands. What guarantee does Redis make about transactions? 
 
