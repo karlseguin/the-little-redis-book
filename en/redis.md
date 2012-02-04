@@ -437,7 +437,7 @@ Finally, Redis lets you specify a key (or keys) to watch and conditionally apply
 
 	redis.multi()
 	current = redis.get('powerlevel')
-	redis.set('powerlevel', current + 1)
+	redis.set('powerlevel', current.to_i + 1)
 	redis.exec()
 
 That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`, we can do:
@@ -445,7 +445,7 @@ That isn't how Redis transactions work. But, if we add a `watch` to `powerlevel`
 	redis.watch('powerlevel')
 	current = redis.get('powerlevel')
 	redis.multi()
-	redis.set('powerlevel', current + 1)
+	redis.set('powerlevel', current.to_i + 1)
 	redis.exec()
 
 If another client changes the value of `powerlevel` after we've called `watch` on it, our transaction will fail. If no client changes the value, the set will work. We can execute this code in a loop until it works.
