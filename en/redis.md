@@ -1,4 +1,3 @@
-
 \thispagestyle{empty}
 \changepage{}{}{}{-0.5cm}{}{2cm}{}{}{}
 ![The Little Redis Book, By Karl Seguin](title.png)\
@@ -250,7 +249,7 @@ Looking at hashes from the perspective of a well-defined object, such as a user,
 
 Lists let you store and manipulate an array of values for a given key. You can add values to the list, get the first or last value and manipulate values at a given index. Lists maintain their order and have efficient index-based operations. We could have a `newusers` list which tracks the newest registered users to our site:
 
-	rpush newusers goku
+	lpush newusers goku
 	ltrim newusers 0 50
 
 First we push a new user at the front of the list, then we trim it so that it only contains the last 50 users. This is a common pattern. `ltrim` is an O(N) operation, where N is the number of values we are removing. In this case, where we always trim after a single insert, it'll actually have a constant performance of O(1) (because N will always be equal to 1).
