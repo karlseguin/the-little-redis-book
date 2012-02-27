@@ -291,7 +291,7 @@ The last and most powerful data structure are sorted sets. If hashes are like st
 
 	zadd friends:duncan 70 ghanima 95 paul 95 chani 75 jessica 1 vladimir
 
-Want to find out how many friends `duncan` has with a rank of 90 or over?
+Want to find out how many friends `duncan` has with a score of 90 or over?
 
 	zcount friends:duncan 90 100
 
