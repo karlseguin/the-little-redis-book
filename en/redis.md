@@ -270,7 +270,7 @@ Set are used to store unique values and provide a number of set-based operations
 	sadd friends:leto ghanima paul chani jessica
 	sadd friends:duncan paul jessica alia
 
-Regardless of how many friends a user has, we can efficiently tell (O(1)) whether userX is a friend of userY or not
+Regardless of how many friends a user has, we can efficiently tell (O(1)) whether userX is a friend of userY or not:
 
 	sismember friends:leto jessica
 	sismember friends:leto vladimir
