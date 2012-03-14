@@ -12,6 +12,8 @@ The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unporte
 
 * [Russian](https://github.com/kondratovich/the-little-redis-book)
 * [Italian](https://github.com/sandroconforto/the-little-redis-book) - [pdf](https://github.com/sandroconforto/the-little-redis-book/raw/master/book/redisIt.pdf)
+* [Chinese](https://github.com/JasonLai256/the-little-redis-book)
+* [Japanese](https://github.com/craftgear/the-little-redis-book/)
 
 ## Formats ##
 The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [pandoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the Markdown file to help with PDF-generation (namely for the title page and to create page breaks between chapters).
