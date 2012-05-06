@@ -54,11 +54,11 @@ We all learn differently: some like to get their hands dirty, some like to watch
 
 Redis doesn't officially support Windows, but there are options available. You wouldn't run these in production, but I've never experienced any limitations while doing development.
 
-One solution can be found at <https://github.com/dmajkic/redis/downloads>. Download the most up to date version (which should be at the top of the list).
+The official port of Microsoft Open Technologies, Inc. can be found at <https://github.com/MSOpenTech/redis>.  As of this writing the solution is not ready for use in production systems.
 
+The previous solution with ready to use builds for Windows can be found at <https://github.com/dmajkic/redis/downloads>. You can download the most up to date version (which should be at the top of the list).
 Extract the zip file and, based on your architecture, open either the `64bit` or `32bit` folder.
 
-Another possibility is the official port of Microsoft Open Technologies, Inc. who started porting Redis to Windows and their fork can be found at <https://github.com/MSOpenTech/redis>.  As of this writing the solution is not ready for use in production systems.
 
 ### On *nix and MacOSX
 
