@@ -610,15 +610,15 @@ This chapter focused on non-data structure-specific commands. Like everything el
 
 ## Chapter 5 - Lua Scripting
 
-Redis 2.6 includes a built-in Lua interpreter which developers can leverage to write complex queries. It wouldn't be wrong of you to think of this capability much like you might view stored procedures available in most relational databases.
+Redis 2.6 includes a built-in Lua interpreter which developers can leverage to write more advanced queries to be executed within Redis. It wouldn't be wrong of you to think of this capability much like you might view stored procedures available in most relational databases.
 
-Probably the most difficult aspect of mastering this feature is learning Lua. Thankfully, Lua is similar to most general puspose languages, is well documented, has an active community and is useful to know beyond Redis scripting. This chapter won't cover Lua in any detail; but the few examples we look at should hopefully serve as a simple introduction.
+The most difficult aspect of mastering this feature is learning Lua. Thankfully, Lua is similar to most general purpose languages, is well documented, has an active community and is useful to know beyond Redis scripting. This chapter won't cover Lua in any detail; but the few examples we look at should hopefully serve as a simple introduction.
 
 ### Why?
 
-Before looking at how to use Lua scripting, you might be wondering why you'd want to use it. Certainly many developers dislike traditional stored procedures, so is this any different? The short answer is no. Improperly used, Redis' Lua scripting can result in harder to test code, business logic tightly coupled with data access or even duplicated logic.
+Before looking at how to use Lua scripting, you might be wondering why you'd want to use it. Many developers dislike traditional stored procedures, is this any different? The short answer is no. Improperly used, Redis' Lua scripting can result in harder to test code, business logic tightly coupled with data access or even duplicated logic.
 
-Properly used however, it's a feature that can simplify code and improve performance. Both of these benefits are largely achieved by avoiding roundtrips for some distinct command. Code is made simpler because each invocation of a Lua script is run without interruption and thus provides a clean way to create your own atomic commands (essentially eliminating the need to use the cumbersome `watch` command). It can improve performance by removing the need to return intermediary results - the final output can be calculated within the script.
+Properly used however, it's a feature that can simplify code and improve performance. Both of these benefits are largely achieved by grouping multiple commands, along with some simple logic, into a custom-build cohesive function. Code is made simpler because each invocation of a Lua script is run without interruption and thus provides a clean way to create your own atomic commands (essentially eliminating the need to use the cumbersome `watch` command). It can improve performance by removing the need to return intermediary results - the final output can be calculated within the script.
 
 The examples in the following sections will better illustrate these points.
 
@@ -640,7 +640,7 @@ The `eval` command takes a Lua script (as a string), the keys we'll be operating
     eos
     Redis.new.eval(script, ['friends:leto'], ['m'])
 
-The above code gets the details for all of Leto's male friends. Notice that to call Redis commands within our code we use the `redis.call("command", ARG1, ARG2, ...)` method.
+The above code gets the details for all of Leto's male friends. Notice that to call Redis commands within our script we use the `redis.call("command", ARG1, ARG2, ...)` method.
 
 If you are new to Lua, you should go over each line carefully. It might be useful to know that `{}` creates an empty `table` (which can act as either an array or a dictionary), `#TABLE` gets the number of elements in the TABLE, and `..` is used to concatenate strings.
 
@@ -650,9 +650,9 @@ If you are new to Lua, you should go over each line carefully. It might be usefu
     vs
     eval "....." 1 "friends:leto" "m"
 
-In the first (incorrect) case, how does Redis know which of the paremeters are keys and which are simply arbitrary arguments? In the second case, there is no ambiguity.
+In the first (incorrect) case, how does Redis know which of the parameters are keys and which are simply arbitrary arguments? In the second case, there is no ambiguity.
 
-This brings up a second question: why must keys be explicitely listed? Every command in Redis knows, at execution time, which keys are going to needed. This will allow future tools, like Redis Cluster, to  distribute requests amongst multiple Redis servers. You might have spotted that our above example actually reads from keys dynamically (without having them passed to `eval`). An `hget` is issued on all of Leto's male friends. That's because the need to list keys ahead of time is more of a suggestion than a hard rule. The above code will run fine in a single-instance setup, or even with replication, but won't in the yet-released Redis Cluster.
+This brings up a second question: why must keys be explicitly listed? Every command in Redis knows, at execution time, which keys are going to needed. This will allow future tools, like Redis Cluster, to  distribute requests amongst multiple Redis servers. You might have spotted that our above example actually reads from keys dynamically (without having them passed to `eval`). An `hget` is issued on all of Leto's male friends. That's because the need to list keys ahead of time is more of a suggestion than a hard rule. The above code will run fine in a single-instance setup, or even with replication, but won't in the yet-released Redis Cluster.
 
 ### Script Management
 
@@ -661,7 +661,7 @@ Even though scripts executed via `eval` are cached by Redis, sending the body ev
     redis = Redis.new
     script_key = redis.script(:load, "THE_SCRIPT")
 
-Once we've loaded the script, we can `evalsha` to execute it:
+Once we've loaded the script, we can use `evalsha` to execute it:
 
     redis.evalsha(script_key, ['friends:leto'], ['m'])
 
@@ -669,7 +669,7 @@ Once we've loaded the script, we can `evalsha` to execute it:
 
 ### Libraries
 
-Redis' Lua implmentation ships with a handful of useful libraries. While `table.lib`, `string.lib` and `math.lib` are quite useful, for me, `cjson.lib` is worth singling out. First, if you find yourself having to pass multiple arguments to a script, it might be cleaner to pass it as JSON:
+Redis' Lua implementation ships with a handful of useful libraries. While `table.lib`, `string.lib` and `math.lib` are quite useful, for me, `cjson.lib` is worth singling out. First, if you find yourself having to pass multiple arguments to a script, it might be cleaner to pass it as JSON:
 
     redis.evalsha ".....", [KEY1], [JSON.fast_generate({gender: 'm', ghola: true})]
 
@@ -690,7 +690,7 @@ Of course, the JSON library can also be used to parse values stored in Redis its
       end
       return friends
 
-Instead of getting the gender from specific hash, we could get it from the stored friend data itself. (This is a much slower solution, and I personally prefer the original, but it does show what's possible).
+Instead of getting the gender from specific hash field, we could get it from the stored friend data itself. (This is a much slower solution, and I personally prefer the original, but it does show what's possible).
 
 ### Atomic
 
@@ -698,11 +698,11 @@ Since Redis is single-threaded, you don't have to worry about your Lua script be
 
 ### Administration
 
-The next chapter will talk about Redis administration and configuration in more detail. For now, simply know that the `lua-time-limit` defines how long a Lua script is allowed to execute before being terminated. The default for this is a generous 5 seconds. Consider lowering it.
+The next chapter will talk about Redis administration and configuration in more detail. For now, simply know that the `lua-time-limit` defines how long a Lua script is allowed to execute before being terminated. The default is generous 5 seconds. Consider lowering it.
 
 ### In This Chapter
 
-This chapter introduced Redis' Lua scripting capabilities. Like anything, this feature can be abused. However, used prudently in order to implement your own custom and focused commands, it won't only simplify your code, but will likely improve performance. Lua scripting is like almost every other Redis feature/command: you make limited, if any, use of it at first and only to find yourself using it more and more each day. 
+This chapter introduced Redis' Lua scripting capabilities. Like anything, this feature can be abused. However, used prudently in order to implement your own custom and focused commands, it won't only simplify your code, but will likely improve performance. Lua scripting is like almost every other Redis feature/command: you make limited, if any, use of it at first only to find yourself using it more and more every day. 
 
 \clearpage
 
