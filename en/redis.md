@@ -1,10 +1,3 @@
-\thispagestyle{empty}
-\changepage{}{}{}{-0.5cm}{}{2cm}{}{}{}
-![The Little Redis Book, By Karl Seguin](title.png)\
-
-\clearpage
-\changepage{}{}{}{0.5cm}{}{-2cm}{}{}{}
-
 ## About This Book
 
 ### License
@@ -33,8 +26,6 @@ A special thanks to [Perry Neal](https://twitter.com/perryneal) for lending me h
 
 The latest source of this book is available at:
 <http://github.com/karlseguin/the-little-redis-book>
-
-\clearpage
 
 ## Introduction
 
@@ -86,8 +77,6 @@ If you are having problems with the above setup I suggest you seek help in the [
 ## Redis Drivers
 
 As you'll soon learn, Redis' API is best described as an explicit set of functions. It has a very simple and procedural feel to it. This means that whether you are using the command line tool, or a driver for your favorite language, things are very similar. Therefore, you shouldn't have any problems following along if you prefer to work from a programming language. If you want, head over to the [client page](http://redis.io/clients) and download the appropriate driver.
-
-\clearpage
 
 ## Chapter 1 - The Basics
 
@@ -174,8 +163,6 @@ The important takeaways from this chapter are:
 * Redis exposes (and is implemented as) five specialized data structures
 
 * Combined, the above make Redis fast and easy to use, but not suitable for every scenario
-
-\clearpage
 
 ## Chapter 2 - The Data Structures
 
@@ -304,8 +291,6 @@ We use `zrevrank` instead of `zrank` since Redis' default sort is from low to hi
 ### In This Chapter
 
 That's a high level overview of Redis' five data structures. One of the neat things about Redis is that you can often do more than you first realize. There are probably ways to use string and sorted sets that no one has thought of yet. As long as you understand the normal use-case though, you'll find Redis ideal for all types of problems. Also, just because Redis exposes five data structures and various methods, don't think you need to use all of them. It isn't uncommon to build a feature while only using a handful of commands.
-
-\clearpage
 
 ## Chapter 3 - Leveraging Data Structures
 
@@ -469,8 +454,6 @@ To get all the bug ids for an account we simply call `hkeys bugs:1233`. To delet
 
 This chapter, combined with the previous one, has hopefully given you some insight on how to use Redis to power real features. There are a number of other patterns you can use to build all types of things, but the real key is to understand the fundamental data structures and to get a sense for how they can be used to achieve things beyond your initial perspective.
 
-\clearpage
-
 ## Chapter 4 - Beyond The Data Structures
 
 While the five data structures form the foundation of Redis, there are other commands which aren't data structure specific. We've already seen a handful of these: `info`, `select`, `flushdb`, `multi`, `exec`, `discard`, `watch` and `keys`. This chapter will look at some of the other important ones.
@@ -606,8 +589,6 @@ Combining the `store` capabilities of `sort` with the expiration commands we've 
 
 This chapter focused on non-data structure-specific commands. Like everything else, their use is situational. It isn't uncommon to build an app or feature that won't make use of expiration, publication/subscription and/or sorting. But it's good to know that they are there. Also, we only touched on some of the commands. There are more, and once you've digested the material in this book it's worth going through the [full list](http://redis.io/commands).
 
-\clearpage
-
 ## Chapter 5 - Lua Scripting
 
 Redis 2.6 includes a built-in Lua interpreter which developers can leverage to write more advanced queries to be executed within Redis. It wouldn't be wrong of you to think of this capability much like you might view stored procedures available in most relational databases.
@@ -704,8 +685,6 @@ The next chapter will talk about Redis administration and configuration in more 
 
 This chapter introduced Redis' Lua scripting capabilities. Like anything, this feature can be abused. However, used prudently in order to implement your own custom and focused commands, it won't only simplify your code, but will likely improve performance. Lua scripting is like almost every other Redis feature/command: you make limited, if any, use of it at first only to find yourself using it more and more every day. 
 
-\clearpage
-
 ## Chapter 6 - Administration
 
 Our last chapter is dedicated to some of the administrative aspects of running Redis. In no way is this a comprehensive guide on Redis administration. At best we'll answer some of the more basic questions new users to Redis are most likely to have.
@@ -767,8 +746,6 @@ High availability and scaling is something that can be achieved today, as long a
 ### In This Chapter
 
 Given the number of projects and sites using Redis already, there can be no doubt that Redis is production-ready, and has been for a while. However, some of the tooling, especially around security and availability is still young. Redis Cluster, which we'll hopefully see soon, should help address some of the current management challenges.
-
-\clearpage
 
 ## Conclusion
 
