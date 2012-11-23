@@ -16,42 +16,57 @@ The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unporte
 * [Japanese](https://github.com/craftgear/the-little-redis-book/)
 
 ## Formats ##
-The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [pandoc](http://johnmacfarlane.net/pandoc/). A few LaTex specific commands have been placed in the Markdown file to help with PDF-generation (namely for the title page and to create page breaks between chapters).
+The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [Pandoc](http://johnmacfarlane.net/pandoc/).
 
-To generate PDF, Kindle and EPUB formats, download and install [pandoc](http://johnmacfarlane.net/pandoc/), a universal document converter.
+The TeX template makes use of [Lena Herrmann's JavaScript highlighter](http://lenaherrmann.net/2010/05/20/javascript-syntax-highlighting-in-the-latex-listings-package).
 
-## Generating the PDF ##
-pandoc includes markdown2pdf to generate the PDF using a variation of <https://github.com/claes/pandoc-templates>:
+Kindle and ePub format provided using [Pandoc](http://johnmacfarlane.net/pandoc/).
 
-	#!/bin/sh
-	paper=a4paper
-	hmargin=3cm
-	vmargin=3cm
-	fontsize=11pt
+## Generating books ##
+Packages listed below are for Ubuntu. If you use another OS or distribution names would be similar.
 
-	mainfont=Verdana
-	sansfont=Tahoma
-	monofont="Courier New"
-	columns=onecolumn
-	geometry=portrait
-	nohyphenation=true
+### PDF
 
+#### Dependencies
 
-	markdown2pdf --xetex --template=template/xetex.template \
-	-V paper=$paper -V hmargin=$hmargin -V vmargin=$vmargin \
-	-V mainfont="$mainfont" -V sansfont="$sansfont" -V monofont="$monofont" \
-	-V geometry=$geometry -V columns=$columns -V fontsize=$fontsize \
-	-V nohyphenation=$nohyphenation en/redis.md -o redis.pdf
+Packages:
 
-## Generating the EPUB ##
-Use the following command (modified from the one found at <http://news.ycombinator.com/item?id=3502033>) to generate the EPUB:
+* `pandoc`
+* `texlive-xetex`
+* `texlive-latex-extra`
+* `texlive-latex-recommended`
 
-	pandoc -f markdown -t epub --epub-metadata=en/metadata.xml \
-	--template=template/xetex.template -V paper=$paper \
-	-V hmargin=$hmargin -V vmargin=$vmargin -V mainfont="$mainfont" \
-	-V sansfont="$sansfont" -V monofont="$monofont" -V geometry=$geometry \
-	-V columns=$columns -V fontsize=$fontsize -V nohyphenation=$nohyphenation \
-	en/redis.md -o redis.epub
+You should have Microsoft fonts installed too. But you could change fonts in `common/pdf-template.tex` file if you want.
+
+#### Building
+
+Run `make en/redis.pdf`.
+
+### ePub
+
+#### Dependencies
+
+Packages:
+
+* `pandoc`
+
+#### Building
+
+Run `make en/redis.epub`.
+
+### Mobi
+
+#### Dependencies
+
+Packages:
+
+* `pandoc`
+
+You should have [KindleGen](http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211) installed too.
+
+#### Building
+
+Run `make en/redis.mobi`.
 
 ## Title Image ##
 A PSD of the title image is included. The font used is [Comfortaa](http://www.dafont.com/comfortaa.font).
