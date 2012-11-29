@@ -1,2 +1,2 @@
-% The Little MongoDB Book
+% The Little Redis Book
 % Karl Seguin
