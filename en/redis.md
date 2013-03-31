@@ -51,7 +51,7 @@ Another solution, which has been available for some time, can be found at <https
 
 ## On *nix and MacOSX
 
-For *nix and and Mac users, building it from source is your best option. The instructions, along with the latest version number, are available at <http://redis.io/download>. At the time of this writing the latest version is 2.6.2; to install this version we would execute:
+For *nix and Mac users, building it from source is your best option. The instructions, along with the latest version number, are available at <http://redis.io/download>. At the time of this writing the latest version is 2.6.2; to install this version we would execute:
 
 	wget http://redis.googlecode.com/files/redis-2.6.2.tar.gz
 	tar xzf redis-2.6.2.tar.gz
