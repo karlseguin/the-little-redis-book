@@ -36,7 +36,8 @@ Packages:
 * `texlive-latex-extra`
 * `texlive-latex-recommended`
 
-You should have Microsoft fonts installed too. But you could change fonts in `common/pdf-template.tex` file if you want.
+You should have [some fonts](https://github.com/karlseguin/the-little-redis-book/blob/master/common/pdf-template.tex#L11) installed too.
+Or you could change them to other ones if you want. Consider that fonts could cause [building troubles](https://github.com/karlseguin/the-little-redis-book/issues/26).
 
 #### Building
 
