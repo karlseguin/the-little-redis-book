@@ -14,6 +14,7 @@ The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unporte
 * [Italian](https://github.com/sandroconforto/the-little-redis-book) - [pdf](https://github.com/sandroconforto/the-little-redis-book/raw/master/book/redisIt.pdf)
 * [Chinese](https://github.com/JasonLai256/the-little-redis-book)
 * [Japanese](https://github.com/craftgear/the-little-redis-book/)
+* [Spanish](https://github.com/raulexposito/the-little-redis-book)
 
 ## Formats ##
 The book is written in [Markdown](http://daringfireball.net/projects/markdown/) and converted to PDF using [Pandoc](http://johnmacfarlane.net/pandoc/).
