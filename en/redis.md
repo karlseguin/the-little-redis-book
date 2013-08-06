@@ -243,8 +243,8 @@ First we push a new user at the front of the list, then we trim it so that it on
 
 This is also the first time that we are seeing a value in one key referencing a value in another. If we wanted to get the details of the last 10 users, we'd do the following combination:
 
-	keys = redis.lrange('newusers', 0, 10)
-	redis.mget(*keys.map {|u| "users:#{u}"})
+	ids = redis.lrange('newusers', 0, 10)
+	redis.mget(*ids.map {|u| "users:#{u}"})
 
 The above is a bit of Ruby which shows the type of multiple roundtrips we talked about before.
 
