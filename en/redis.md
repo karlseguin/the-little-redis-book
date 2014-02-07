@@ -108,7 +108,7 @@ Values represent the actual data associated with the key. They can be anything. 
 
 Let's get our hands a little dirty. Enter the following command:
 
-	set users:leto "{name: leto, planet: dune, likes: [spice]}"
+	set users:leto '{"name": "leto", "planet": "dune", "likes": ["spice"]}'
 
 This is the basic anatomy of a Redis command. First we have the actual command, in this case `set`. Next we have its parameters. The `set` command takes two parameters: the key we are setting and the value we are setting it to. Many, but not all, commands take a key (and when they do, it's often the first parameter). Can you guess how to retrieve this value? Hopefully you said (but don't worry if you weren't sure!):
 
@@ -180,18 +180,18 @@ Strings are the most basic data structures available in Redis. When you think of
 
 We already saw a common use-case for strings, storing instances of objects by key. This is something that you'll make heavy use of:
 
-	set users:leto "{name: leto, planet: dune, likes: [spice]}"
+	set users:leto '{"name": leto, "planet": dune, "likes": ["spice"]}'
 
 Additionally, Redis lets you do some common operations. For example `strlen <key>` can be used to get the length of a key's value; `getrange <key> <start> <end>` returns the specified range of a value; `append <key> <value>` appends the value to the existing value (or creates it if it doesn't exist already). Go ahead and try those out. This is what I get:
 
 	> strlen users:leto
-	(integer) 42
+	(integer) 50
 
-	> getrange users:leto 27 40
-	"likes: [spice]"
+	> getrange users:leto 31 48
+	"\"likes\": [\"spice\"]"
 
 	> append users:leto " OVER 9000!!"
-	(integer) 54
+	(integer) 62
 
 Now, you might be thinking, that's great, but it doesn't make sense. You can't meaningfully pull a range out of JSON or append a value. You are right, the lesson here is that some of the commands, especially with the string data structure, only make sense given specific type of data.
 
@@ -321,8 +321,8 @@ It's worth pointing out that the Big O notation deals with the worst case. When 
 
 A common situation you'll run into is wanting to query the same value by different keys. For example, you might want to get a user by email (for when they first log in) and also by id (after they've logged in). One horrible solution is to duplicate your user object into two string values:
 
-	set users:leto@dune.gov "{id: 9001, email: 'leto@dune.gov', ...}"
-	set users:9001 "{id: 9001, email: 'leto@dune.gov', ...}"
+	set users:leto@dune.gov '{"id": 9001, "email": "leto@dune.gov", ...}'
+	set users:9001 '{"id": 9001, "email": "leto@dune.gov", ...}'
 
 This is bad because it's a nightmare to manage and it takes twice the amount of memory.
 
@@ -330,7 +330,7 @@ It would be nice if Redis let you link one key to another, but it doesn't (and i
 
 Using a hash, we can remove the need for duplication:
 
-	set users:9001 "{id: 9001, email: leto@dune.gov, ...}"
+	set users:9001 '{"id": 9001, "email": "leto@dune.gov", ...}'
 	hset users:lookup:email leto@dune.gov 9001
 
 What we are doing is using the field as a pseudo secondary index and referencing the single user object. To get a user by id, we issue a normal `get`:
@@ -444,8 +444,8 @@ How do people try and use it? Say you are building a hosted bug tracking service
 
 The better solution is to use a hash. Much like we can use hashes to provide a way to expose secondary indexes, so too can we use them to organize our data:
 
-	hset bugs:1233 1 "{id:1, account: 1233, subject: '...'}"
-	hset bugs:1233 2 "{id:2, account: 1233, subject: '...'}"
+	hset bugs:1233 1 '{"id":1, "account": 1233, "subject": "..."}'
+	hset bugs:1233 2 '{"id":2, "account": 1233, "subject": "..."}'
 
 To get all the bug ids for an account we simply call `hkeys bugs:1233`. To delete a specific bug we can do `hdel bugs:1233 2` and to delete an account we can delete the key via `del bugs:1233`.
 
@@ -559,19 +559,19 @@ Although you can have millions of keys within Redis, I think the above can get a
 
 	hset bug:12339 severity 3
 	hset bug:12339 priority 1
-	hset bug:12339 details "{id: 12339, ....}"
+	hset bug:12339 details '{"id": 12339, ....}'
 
 	hset bug:1382 severity 2
 	hset bug:1382 priority 2
-	hset bug:1382 details "{id: 1382, ....}"
+	hset bug:1382 details '{"id": 1382, ....}'
 
 	hset bug:338 severity 5
 	hset bug:338 priority 3
-	hset bug:338 details "{id: 338, ....}"
+	hset bug:338 details '{"id": 338, ....}'
 
 	hset bug:9338 severity 4
 	hset bug:9338 priority 2
-	hset bug:9338 details "{id: 9338, ....}"
+	hset bug:9338 details '{"id": 9338, ....}'
 
 Not only is everything better organized, and we can sort by `severity` or `priority`, but we can also tell `sort` what field to retrieve:
 
@@ -595,7 +595,7 @@ Rather than implementing paging through a `limit` and `offset`, `scan` uses a `c
 
     scan 0 match bugs:* count 20
 
-As part of its reply, `scan` returns the next cursor to use. Alternatively, scan returns `0` to signify the end of results. Note that the next cursor value doesn't correspond to the result number or anything else which clients might consider useful. 
+As part of its reply, `scan` returns the next cursor to use. Alternatively, scan returns `0` to signify the end of results. Note that the next cursor value doesn't correspond to the result number or anything else which clients might consider useful.
 
 A typical flow might look like this:
 
@@ -656,7 +656,7 @@ The above code gets the details for all of Leto's male friends. Notice that to c
 If you are new to Lua, you should go over each line carefully. It might be useful to know that `{}` creates an empty `table` (which can act as either an array or a dictionary), `#TABLE` gets the number of elements in the TABLE, and `..` is used to concatenate strings.
 
 `eval` actually take 4 parameters. The second parameter should actually be the number of keys; however the Ruby driver automatically creates this for us. Why is this needed? Consider how the above looks like when executed from the CLI:
-  
+
     eval "....." "friends:leto" "m"
     vs
     eval "....." 1 "friends:leto" "m"
@@ -713,7 +713,7 @@ The next chapter will talk about Redis administration and configuration in more 
 
 ## In This Chapter
 
-This chapter introduced Redis' Lua scripting capabilities. Like anything, this feature can be abused. However, used prudently in order to implement your own custom and focused commands, it won't only simplify your code, but will likely improve performance. Lua scripting is like almost every other Redis feature/command: you make limited, if any, use of it at first only to find yourself using it more and more every day. 
+This chapter introduced Redis' Lua scripting capabilities. Like anything, this feature can be abused. However, used prudently in order to implement your own custom and focused commands, it won't only simplify your code, but will likely improve performance. Lua scripting is like almost every other Redis feature/command: you make limited, if any, use of it at first only to find yourself using it more and more every day.
 
 # Chapter 6 - Administration
 
