@@ -286,7 +286,7 @@ How about figuring out `chani`'s rank?
 
 	zrevrank friends:duncan chani
 
-We use `zrevrank` instead of `zrank` since Redis' default sort is from low to high (but in this case we are ranking from high to low). The most obvious use-case for sorted sets is a leaderboard system. In reality though, anything you want sorted by an some integer, and be able to efficiently manipulate based on that score, might be a good fit for a sorted set.
+We use `zrevrank` instead of `zrank` since Redis' default sort is from low to high (but in this case we are ranking from high to low). The most obvious use-case for sorted sets is a leaderboard system. In reality though, anything you want sorted by some integer, and be able to efficiently manipulate based on that score, might be a good fit for a sorted set.
 
 ## In This Chapter
 
@@ -368,8 +368,8 @@ We already mentioned that making frequent trips to the server is a common patter
 
 First, many commands either accept one or more set of parameters or have a sister-command which takes multiple parameters. We saw `mget` earlier, which takes multiple keys and returns the values:
 
-	keys = redis.lrange('newusers', 0, 10)
-	redis.mget(*keys.map {|u| "users:#{u}"})
+	ids = redis.lrange('newusers', 0, 9)
+	redis.mget(*ids.map {|u| "users:#{u}"})
 
 Or the `sadd` command which adds 1 or more members to a set:
 
