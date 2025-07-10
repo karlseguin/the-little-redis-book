@@ -10,6 +10,7 @@ The book is freely distributed under the  [Attribution-NonCommercial 3.0 Unporte
 
 ## Translations ##
 
+* [Ukrainian](https://github.com/zemliany/the-little-redis-book)
 * [Russian](https://github.com/kondratovich/the-little-redis-book)
 * [Italian](https://github.com/sandroconforto/the-little-redis-book) - [pdf](https://github.com/sandroconforto/the-little-redis-book/raw/master/book/redisIt.pdf)
 * [Chinese](https://github.com/JasonLai256/the-little-redis-book)
